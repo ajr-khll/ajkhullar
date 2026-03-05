@@ -1,0 +1,706 @@
+/* =========================================================
+   System 7 Base Styles
+   All reusable System 7 visual primitives. Import this
+   after variables.css. Components reference these classes
+   rather than duplicating the styles.
+   ========================================================= */
+
+/* ----- Reset & Base ----- */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+  color: var(--color-black);
+  background: var(--color-desktop);
+  /* Disable font smoothing for the crisp, pixelated System 7 look */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* Allow text selection only inside content areas */
+.selectable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ----- Desktop Pattern (50% gray dither) ----- */
+
+.desktop-pattern {
+  position: fixed;
+  inset: 0;
+  /* Checker dither: 1px black on even-row/even-col, white elsewhere */
+  background-color: var(--color-white);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23000'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23000'/%3E%3C/svg%3E");
+  background-size: 2px 2px;
+  background-repeat: repeat;
+}
+
+/* ----- Window Shell ----- */
+
+.window {
+  position: absolute;
+  background: var(--color-window-bg);
+  /* Classic Mac drop shadow: 2px solid offset */
+  border: 1px solid var(--color-black);
+  box-shadow: 2px 2px 0 var(--color-black);
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  min-height: 40px;
+}
+
+.window--dialog {
+  /* Dialogs are centered, not draggable to arbitrary positions */
+  box-shadow: 3px 3px 0 var(--color-black);
+}
+
+/* ----- Title Bar ----- */
+
+.title-bar {
+  height: var(--title-bar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  cursor: move;
+  border-bottom: 1px solid var(--color-black);
+  /* Active: pinstripes */
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--color-black) 0px,
+    var(--color-black) 1px,
+    var(--color-white) 1px,
+    var(--color-white) 2px
+  );
+}
+
+.title-bar--inactive {
+  /* Inactive: solid gray, no pinstripes */
+  background: var(--color-gray-light);
+}
+
+.title-bar__title {
+  /* Title punches a white rectangle through the pinstripes */
+  background: var(--color-white);
+  padding: 0 8px;
+  font-size: var(--font-size-title);
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+  line-height: var(--title-bar-height);
+}
+
+.title-bar__title--inactive {
+  background: var(--color-gray-light);
+}
+
+.title-bar__close-box {
+  position: absolute;
+  left: 5px;
+  width: var(--close-box-size);
+  height: var(--close-box-size);
+  background: var(--color-white);
+  border: 1px solid var(--color-black);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.title-bar__close-box:active {
+  background: var(--color-black);
+}
+
+/* Zoom/maximize box (right side of title bar) */
+.title-bar__zoom-box {
+  position: absolute;
+  right: 5px;
+  width: var(--close-box-size);
+  height: var(--close-box-size);
+  background: var(--color-white);
+  border: 1px solid var(--color-black);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* ----- Window Content Area ----- */
+
+.window__content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.window__scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px;
+}
+
+/* ----- Resize Handle ----- */
+
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: var(--resize-handle-size);
+  height: var(--resize-handle-size);
+  cursor: nwse-resize;
+  /* Classic grow-box diagonal lines */
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-black) 0px,
+    var(--color-black) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+/* ----- Drag Outline ----- */
+
+.drag-outline {
+  position: fixed;
+  pointer-events: none;
+  border: 1px dotted var(--color-black);
+  z-index: var(--z-drag-outline);
+  background: transparent;
+}
+
+/* ----- System 7 Scrollbar (webkit) ----- */
+
+.sys7-scroll::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+.sys7-scroll::-webkit-scrollbar-track {
+  background: var(--color-white);
+  /* Dotted track pattern */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23aaa'/%3E%3C/svg%3E");
+  background-size: 2px 2px;
+  border-left: 1px solid var(--color-black);
+}
+
+.sys7-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-gray-light);
+  border: 1px solid var(--color-black);
+}
+
+.sys7-scroll::-webkit-scrollbar-button {
+  background: var(--color-gray-light);
+  border: 1px solid var(--color-black);
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+.sys7-scroll::-webkit-scrollbar-corner {
+  background: var(--color-gray-light);
+}
+
+/* ----- Buttons ----- */
+
+.sys7-btn {
+  background: var(--color-gray-light);
+  border: 1px solid;
+  /* Top-left: white (light source), bottom-right: dark (shadow) */
+  border-color: var(--color-white) var(--color-gray-dark) var(--color-gray-dark) var(--color-white);
+  /* Outer black outline */
+  outline: 1px solid var(--color-black);
+  outline-offset: 0;
+  padding: 3px 16px;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  font-weight: normal;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 60px;
+  text-align: center;
+  line-height: 1.3;
+  -webkit-font-smoothing: none;
+}
+
+.sys7-btn:active {
+  /* Invert the bevel on press */
+  border-color: var(--color-gray-dark) var(--color-white) var(--color-white) var(--color-gray-dark);
+  background: var(--color-gray-mid);
+}
+
+.sys7-btn:focus-visible {
+  outline: 1px solid var(--color-black);
+}
+
+/* Default (primary) button has a thick double-border */
+.sys7-btn--default {
+  outline: 3px solid var(--color-black);
+  outline-offset: 2px;
+  font-weight: bold;
+}
+
+/* ----- Text Input ----- */
+
+.sys7-input {
+  background: var(--color-white);
+  border: 2px solid;
+  /* Inset bevel: dark top-left, light bottom-right */
+  border-color: var(--color-gray-dark) var(--color-white) var(--color-white) var(--color-gray-dark);
+  outline: 1px solid var(--color-black);
+  outline-offset: 0;
+  padding: 3px 6px;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  width: 100%;
+  line-height: 1.4;
+  -webkit-font-smoothing: none;
+}
+
+.sys7-input:focus {
+  outline: 1px solid var(--color-black);
+}
+
+/* ----- Textarea ----- */
+
+.sys7-textarea {
+  background: var(--color-white);
+  border: 2px solid;
+  border-color: var(--color-gray-dark) var(--color-white) var(--color-white) var(--color-gray-dark);
+  outline: 1px solid var(--color-black);
+  outline-offset: 0;
+  padding: 6px;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  width: 100%;
+  resize: none;
+  line-height: 1.5;
+  -webkit-font-smoothing: none;
+}
+
+/* ----- Checkbox ----- */
+
+.sys7-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  cursor: pointer;
+  font-size: var(--font-size-ui);
+}
+
+.sys7-checkbox-box {
+  width: 12px;
+  height: 12px;
+  background: var(--color-white);
+  border: 1px solid var(--color-black);
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ----- Menu Bar ----- */
+
+.menu-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--menu-bar-height);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-black);
+  display: flex;
+  align-items: center;
+  z-index: var(--z-menu-bar);
+  padding: 0 4px;
+  gap: 0;
+}
+
+.menu-bar__item {
+  padding: 0 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: default;
+  font-size: var(--font-size-ui);
+  white-space: nowrap;
+  position: relative;
+}
+
+.menu-bar__item:hover,
+.menu-bar__item--active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.menu-bar__spacer {
+  flex: 1;
+}
+
+.menu-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-right: 4px;
+}
+
+/* Menu dropdown */
+.menu-dropdown {
+  position: absolute;
+  top: calc(var(--menu-bar-height) - 1px);
+  left: 0;
+  background: var(--color-white);
+  border: 1px solid var(--color-black);
+  box-shadow: 2px 2px 0 var(--color-black);
+  min-width: 160px;
+  z-index: var(--z-menu-bar);
+  padding: 2px 0;
+}
+
+.menu-dropdown__item {
+  padding: 3px 20px 3px 24px;
+  cursor: default;
+  font-size: var(--font-size-ui);
+  white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-dropdown__item:hover,
+.menu-dropdown__item--highlighted {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.menu-dropdown__item--disabled {
+  color: var(--color-gray-mid);
+  pointer-events: none;
+}
+
+.menu-dropdown__separator {
+  height: 1px;
+  background: var(--color-black);
+  margin: 2px 0;
+}
+
+/* ----- Desktop Icon ----- */
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  cursor: default;
+  width: 72px;
+  text-align: center;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.desktop-icon:hover .desktop-icon__label {
+  text-decoration: underline;
+}
+
+.desktop-icon--selected {
+  border: 1px dotted var(--color-black);
+}
+
+.desktop-icon--selected .desktop-icon__label {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.desktop-icon__img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.desktop-icon__label {
+  font-size: var(--font-size-small);
+  line-height: 1.3;
+  word-break: break-word;
+  padding: 0 2px;
+  max-width: 68px;
+}
+
+/* ----- Finder Window ----- */
+
+.finder-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--color-black);
+  background: var(--color-gray-light);
+}
+
+.finder-toolbar__btn {
+  padding: 2px 12px;
+  font-size: var(--font-size-small);
+  cursor: pointer;
+}
+
+.finder-toolbar__btn--active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.finder-pane {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.finder-sidebar {
+  width: 140px;
+  border-right: 1px solid var(--color-black);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.finder-sidebar__item {
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  font-size: var(--font-size-ui);
+  border-bottom: 1px solid var(--color-gray-light);
+}
+
+.finder-sidebar__item:hover,
+.finder-sidebar__item--active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.finder-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.finder-status {
+  padding: 3px 8px;
+  border-top: 1px solid var(--color-black);
+  font-size: var(--font-size-small);
+  background: var(--color-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ----- Terminal Window ----- */
+
+.terminal-body {
+  background: var(--color-terminal-bg);
+  color: var(--color-terminal-fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  line-height: 1.5;
+  -webkit-font-smoothing: none;
+}
+
+.terminal-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.terminal-line--input::before {
+  content: "$ ";
+  color: var(--color-terminal-fg);
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--color-terminal-cursor);
+  animation: blink 1s step-start infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ----- Document Window ----- */
+
+.document-body {
+  padding: 16px;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  line-height: 1.6;
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-white);
+}
+
+.document-body h1 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-black);
+}
+
+.document-body h2 {
+  font-size: 13px;
+  font-weight: bold;
+  margin: 12px 0 6px;
+}
+
+.document-body p {
+  margin-bottom: 8px;
+}
+
+.document-body ul {
+  margin: 6px 0 6px 20px;
+}
+
+.document-body li {
+  margin-bottom: 3px;
+}
+
+.document-body a {
+  color: var(--color-black);
+  text-decoration: underline;
+}
+
+.document-body .tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0;
+}
+
+.document-body .tag {
+  padding: 1px 6px;
+  border: 1px solid var(--color-black);
+  font-size: var(--font-size-small);
+  background: var(--color-gray-light);
+}
+
+/* ----- Dialog Window ----- */
+
+.dialog-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 340px;
+}
+
+.dialog-icon-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.dialog-message {
+  font-size: var(--font-size-ui);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dialog-field label {
+  font-size: var(--font-size-ui);
+  font-weight: bold;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-gray-light);
+}
+
+/* ----- CRT Scanline Overlay ----- */
+
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.04) 2px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: var(--z-drag-outline);
+}
+
+/* ----- Tooltip / Balloon Help ----- */
+
+.tooltip {
+  position: absolute;
+  background: var(--color-white);
+  border: 1px solid var(--color-black);
+  box-shadow: 2px 2px 0 var(--color-black);
+  padding: 4px 8px;
+  font-size: var(--font-size-small);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 8000;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Balloon tail */
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-black);
+}
+
+/* ----- Utility ----- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

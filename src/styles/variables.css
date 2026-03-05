@@ -1,0 +1,71 @@
+/* =========================================================
+   System 7 Design Tokens
+   Defines the complete color palette, spacing, and type
+   scale for the System 7 UI language.
+   ========================================================= */
+
+:root {
+  /* --- Color Palette --- */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* Grays — the heart of System 7 */
+  --color-gray-light: #dddddd;  /* button faces, inactive chrome */
+  --color-gray-mid: #aaaaaa;    /* inactive title bars, borders */
+  --color-gray-dark: #666666;   /* shadow sides of 3D elements */
+
+  /* Desktop background — a 50% gray dither */
+  --color-desktop: #888888;
+
+  /* Highlight — the classic Mac blue */
+  --color-highlight: #000080;
+  --color-highlight-light: #0000d0;
+
+  /* Window backgrounds */
+  --color-window-bg: #ffffff;
+  --color-content-bg: #ffffff;
+
+  /* Terminal */
+  --color-terminal-bg: #000000;
+  --color-terminal-fg: #33ff33;
+  --color-terminal-cursor: #33ff33;
+
+  /* --- Typography --- */
+  /* System UI font stack — approximates Chicago/Geneva.
+     Add a @font-face for ChiKareGo or Chicago Clone to override. */
+  --font-ui: "Chicago", "Charcoal", -apple-system, "Helvetica Neue", sans-serif;
+  --font-mono: "Courier New", "Monaco", monospace;
+
+  --font-size-ui: 12px;
+  --font-size-small: 10px;
+  --font-size-title: 12px;
+  --line-height-ui: 1.4;
+
+  /* --- Spacing --- */
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+
+  /* --- Window Chrome --- */
+  --title-bar-height: 20px;
+  --menu-bar-height: 22px;
+  --scrollbar-width: 16px;
+  --resize-handle-size: 16px;
+  --close-box-size: 12px;
+
+  /* --- Z-index layers --- */
+  --z-desktop: 0;
+  --z-icons: 10;
+  --z-windows: 100;      /* base; windows use inline z-index above this */
+  --z-drag-outline: 9000;
+  --z-menu-bar: 9500;
+  --z-boot: 10000;
+
+  /* --- Animation --- */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --easing-standard: ease-out;
+}
