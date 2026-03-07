@@ -517,8 +517,8 @@ body {
   background: var(--color-terminal-bg);
   color: var(--color-terminal-fg);
   font-family: var(--font-mono);
-  font-size: 13px;
-  padding: 12px;
+  font-size: 15px;
+  padding: 14px;
   flex: 1;
   overflow-y: auto;
   line-height: 1.5;
@@ -569,7 +569,7 @@ body {
 }
 
 .document-body h2 {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: bold;
   margin: 12px 0 6px;
 }

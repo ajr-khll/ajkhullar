@@ -57,7 +57,7 @@ export default function Desktop() {
           const centeredConfig = {
             ...config,
             x: Math.max(20, Math.floor((window.innerWidth - config.width) / 2)),
-            y: Math.max(22, Math.floor((window.innerHeight - config.height) / 2)),
+            y: Math.max(28, Math.floor((window.innerHeight - config.height) / 2)),
           };
           openWindow(centeredConfig);
           return;

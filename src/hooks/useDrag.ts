@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useWindowManager } from "@/state/windowManager";
 
-const MENU_BAR_HEIGHT = 22; // px — windows cannot be dragged above the menu bar
+const MENU_BAR_HEIGHT = 28; // px — windows cannot be dragged above the menu bar
 
 /**
  * Provides a mousedown handler for the window title bar.

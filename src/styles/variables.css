@@ -36,10 +36,10 @@
   --font-ui: "Chicago", "Charcoal", -apple-system, "Helvetica Neue", sans-serif;
   --font-mono: "Courier New", "Monaco", monospace;
 
-  --font-size-ui: 12px;
-  --font-size-small: 10px;
-  --font-size-title: 12px;
-  --line-height-ui: 1.4;
+  --font-size-ui: 14px;
+  --font-size-small: 12px;
+  --font-size-title: 14px;
+  --line-height-ui: 1.5;
 
   /* --- Spacing --- */
   --space-1: 1px;
@@ -50,11 +50,11 @@
   --space-16: 16px;
 
   /* --- Window Chrome --- */
-  --title-bar-height: 20px;
-  --menu-bar-height: 22px;
-  --scrollbar-width: 16px;
-  --resize-handle-size: 16px;
-  --close-box-size: 12px;
+  --title-bar-height: 26px;
+  --menu-bar-height: 28px;
+  --scrollbar-width: 18px;
+  --resize-handle-size: 18px;
+  --close-box-size: 14px;
 
   /* --- Z-index layers --- */
   --z-desktop: 0;

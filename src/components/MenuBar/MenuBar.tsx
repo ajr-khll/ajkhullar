@@ -45,7 +45,7 @@ export default function MenuBar({ onRestart }: MenuBarProps) {
       openWindow({
         ...config,
         x: Math.max(20, Math.floor((window.innerWidth - config.width) / 2)),
-        y: Math.max(22, Math.floor((window.innerHeight - config.height) / 2)),
+        y: Math.max(28, Math.floor((window.innerHeight - config.height) / 2)),
       });
     } else {
       openWindow(config);

@@ -20,14 +20,20 @@ const BOOT_SESSION_KEY = "sys7-booted";
 export default function Home() {
   const openWindow = useWindowManager((s) => s.openWindow);
 
-  // Show boot sequence unless this session has already seen it
-  const [booting, setBooting] = useState(() => {
-    if (typeof sessionStorage === "undefined") return true;
-    return sessionStorage.getItem(BOOT_SESSION_KEY) !== "true";
-  });
+  // Always start as booting=true so server and client render the same initial
+  // HTML (avoids hydration mismatch). After mount we check sessionStorage and
+  // immediately skip the animation if this session has already seen it.
+  const [booting, setBooting] = useState(true);
+  const [desktopVisible, setDesktopVisible] = useState(false);
 
-  // Show the desktop (with opacity animation) after boot completes
-  const [desktopVisible, setDesktopVisible] = useState(!booting);
+  useEffect(() => {
+    if (sessionStorage.getItem(BOOT_SESSION_KEY) === "true") {
+      // Already booted this session — skip straight to the desktop
+      setBooting(false);
+      setDesktopVisible(true);
+    }
+    // If not seen yet, the BootSequence overlay is already showing — do nothing.
+  }, []); // runs once after first paint
 
   function handleBootComplete() {
     sessionStorage.setItem(BOOT_SESSION_KEY, "true");
