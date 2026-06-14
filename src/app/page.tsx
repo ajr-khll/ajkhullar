@@ -1,74 +1,121 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useWindowManager } from "@/state/windowManager";
-import { SECTION_WINDOWS } from "@/data/projects";
-import BootSequence from "@/components/BootSequence/BootSequence";
-import Desktop from "@/components/Desktop/Desktop";
-import MenuBar from "@/components/MenuBar/MenuBar";
 
-const BOOT_SESSION_KEY = "sys7-booted";
+const projects = [
+  {
+    id: "1",
+    title: "Project I",
+    meta: "C / C++",
+    description: "Description coming soon.",
+  },
+  {
+    id: "2",
+    title: "Project II",
+    meta: "Systems",
+    description: "Description coming soon.",
+  },
+  {
+    id: "3",
+    title: "Project III",
+    meta: "Optimization",
+    description: "Description coming soon.",
+  },
+];
 
-/**
- * Root page — orchestrates the boot sequence and desktop.
- *
- * Flow:
- *   1. On first visit this session: show BootSequence overlay
- *   2. After boot (or skip): mount the Desktop and pre-open About Me
- *   3. "Restart" from the Apple menu replays the boot animation
- */
 export default function Home() {
-  const openWindow = useWindowManager((s) => s.openWindow);
-
-  // Always start as booting=true so server and client render the same initial
-  // HTML (avoids hydration mismatch). After mount we check sessionStorage and
-  // immediately skip the animation if this session has already seen it.
-  const [booting, setBooting] = useState(true);
-  const [desktopVisible, setDesktopVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    if (sessionStorage.getItem(BOOT_SESSION_KEY) === "true") {
-      // Already booted this session — skip straight to the desktop
-      setBooting(false);
-      setDesktopVisible(true);
+    function onScroll() {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(total > 0 ? window.scrollY / total : 0);
     }
-    // If not seen yet, the BootSequence overlay is already showing — do nothing.
-  }, []); // runs once after first paint
-
-  function handleBootComplete() {
-    sessionStorage.setItem(BOOT_SESSION_KEY, "true");
-    setBooting(false);
-    setDesktopVisible(true);
-  }
-
-  function handleRestart() {
-    sessionStorage.removeItem(BOOT_SESSION_KEY);
-    setDesktopVisible(false);
-    // Small delay so the desktop fades out before the boot sequence shows
-    setTimeout(() => setBooting(true), 200);
-  }
-
-  // Pre-open the About Me window once the desktop is visible
-  useEffect(() => {
-    if (desktopVisible) {
-      openWindow(SECTION_WINDOWS.about);
-    }
-  }, [desktopVisible, openWindow]);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
-      {booting && <BootSequence onComplete={handleBootComplete} />}
-
-      {/* Desktop fades in after boot */}
       <div
-        style={{
-          opacity: desktopVisible ? 1 : 0,
-          transition: "opacity 300ms ease-in",
-          pointerEvents: desktopVisible ? "auto" : "none",
-        }}
-      >
-        <MenuBar onRestart={handleRestart} />
-        <Desktop />
+        className="progress-bar"
+        style={{ width: `${progress * 100}%` }}
+      />
+
+      <div className="container">
+        <header>
+          <h1>AJ Khullar</h1>
+          <p className="subtitle">USC &middot; Junior &middot; Computer Science</p>
+        </header>
+
+        <section>
+          <p>
+            Computer science undergraduate at the University of Southern
+            California. I write software that runs close to the metal — mostly
+            C and C++, mostly concerned with making things fast.
+          </p>
+          <p>
+            I care about correctness first and performance second, because you
+            cannot optimize what is wrong. I am drawn to problems where
+            efficiency has real consequences: compilers, memory systems,
+            algorithms under genuine constraints.
+          </p>
+        </section>
+
+        <hr />
+
+        <section>
+          <h2>Specialization</h2>
+          <p>
+            Systems programming in C and C++. My focus is performance-critical
+            code: cache-aware data structures, SIMD, profile-guided optimization,
+            and the discipline of measuring before guessing. I am comfortable
+            with manual memory management, undefined behavior, and the space
+            between what you write and what the machine actually executes.
+          </p>
+        </section>
+
+        <section>
+          <h2>Education</h2>
+          <p>
+            University of Southern California, Los Angeles.<br />
+            B.S. Computer Science &mdash; Junior, expected graduation 2028.<br />
+            Coursework: Data Structures &amp; Algorithms, Computer Systems,
+            Operating Systems, Programming Languages, Discrete Mathematics.
+          </p>
+        </section>
+
+        <hr />
+
+        <section>
+          <h2>Projects</h2>
+          <div className="project-list">
+            {projects.map((project) => (
+              <div key={project.id} className="project-entry">
+                <h3>{project.title}</h3>
+                <p className="project-meta">{project.meta}</p>
+                <p>{project.description}</p>
+                <div className="demo-placeholder">live demo</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <hr />
+
+        <section>
+          <h2>Contact</h2>
+          <ul className="contact-links">
+            <li>
+              <a href="mailto:arjunkhullar2006@gmail.com">email</a>
+            </li>
+            <li>
+              <a href="https://github.com/ajkhullar" target="_blank" rel="noopener noreferrer">
+                github
+              </a>
+            </li>
+          </ul>
+        </section>
       </div>
     </>
   );
