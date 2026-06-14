@@ -113,6 +113,14 @@ a:hover {
   font-family: "Times New Roman", Times, serif;
 }
 
+.demo-iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  background: #000;
+}
+
 .contact-links {
   list-style: none;
   display: flex;

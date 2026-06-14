@@ -5,21 +5,26 @@ import { useEffect, useState } from "react";
 const projects = [
   {
     id: "1",
-    title: "Project I",
-    meta: "C / C++",
-    description: "Description coming soon.",
+    title: "Particle Simulation",
+    meta: "C · WebAssembly · raylib",
+    description:
+      "10,000 particles with real-time elastic collisions and gravity. Spatial grid partitioning keeps neighbor queries O(n). Written in C11, compiled to WebAssembly via Emscripten. Press SPACE to reset.",
+    demo: "/particles/particles.html",
   },
   {
     id: "2",
-    title: "Project II",
-    meta: "Systems",
-    description: "Description coming soon.",
+    title: "Digit Recognizer",
+    meta: "C++ · WebAssembly · MNIST",
+    description:
+      "Two-layer neural network (784 → 128 → 10) trained from scratch in C++ on 42,000 MNIST examples. Spatial grid, He initialization, mini-batch SGD. 97.8% accuracy. Compiled to WebAssembly — draw a digit below.",
+    demo: "/nn/inference.html",
   },
   {
     id: "3",
     title: "Project III",
     meta: "Optimization",
     description: "Description coming soon.",
+    demo: null,
   },
 ];
 
@@ -95,7 +100,16 @@ export default function Home() {
                 <h3>{project.title}</h3>
                 <p className="project-meta">{project.meta}</p>
                 <p>{project.description}</p>
-                <div className="demo-placeholder">live demo</div>
+                {project.demo ? (
+                  <iframe
+                    src={project.demo}
+                    className="demo-iframe"
+                    title={`${project.title} live demo`}
+                    allow="keyboard"
+                  />
+                ) : (
+                  <div className="demo-placeholder">live demo</div>
+                )}
               </div>
             ))}
           </div>
