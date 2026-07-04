@@ -2,135 +2,68 @@
 
 import { useEffect, useState } from "react";
 
-const projects = [
-  {
-    id: "1",
-    title: "Particle Simulation",
-    meta: "C · WebAssembly · raylib",
-    description:
-      "10,000 particles with real-time elastic collisions and gravity. Spatial grid partitioning keeps neighbor queries O(n). Written in C11, compiled to WebAssembly via Emscripten. Press SPACE to reset.",
-    demo: "/particles/particles.html",
-  },
-  {
-    id: "2",
-    title: "Digit Recognizer",
-    meta: "C++ · WebAssembly · MNIST",
-    description:
-      "Two-layer neural network (784 → 128 → 10) trained from scratch in C++ on 42,000 MNIST examples. Spatial grid, He initialization, mini-batch SGD. 97.8% accuracy. Compiled to WebAssembly — draw a digit below.",
-    demo: "/nn/inference.html",
-  },
-  {
-    id: "3",
-    title: "Project III",
-    meta: "Optimization",
-    description: "Description coming soon.",
-    demo: null,
-  },
+// Left-column links. Add/remove freely — order is preserved.
+const links = [
+  { label: "GitHub", href: "https://github.com/ajr-khll" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/aj-khullar" },
+  { label: "Email", href: "mailto:arjunkhu@usc.edu" },
 ];
 
 export default function Home() {
-  const [progress, setProgress] = useState(0);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
 
+  // Restore saved theme on mount.
   useEffect(() => {
-    function onScroll() {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(total > 0 ? window.scrollY / total : 0);
+    const saved = localStorage.getItem("theme");
+    if (saved === "light" || saved === "dark") {
+      setTheme(saved);
     }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Reflect theme on <html> so CSS variables switch.
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
-    <>
-      <div
-        className="progress-bar"
-        style={{ width: `${progress * 100}%` }}
-      />
+    <main className="page">
+      <header className="masthead">
+        <h1 className="name">AJ Khullar</h1>
+        <p className="tagline">CS @ USC · Systems + Performance</p>
 
-      <div className="container">
-        <header>
-          <h1>AJ Khullar</h1>
-          <p className="subtitle">USC &middot; Junior &middot; Computer Science</p>
-        </header>
+        <nav className="links">
+          {links.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target={link.href.startsWith("http") ? "_blank" : undefined}
+              rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </header>
 
-        <section>
-          <p>
-            Computer science undergraduate at the University of Southern
-            California. I write software that runs close to the metal — mostly
-            C and C++, mostly concerned with making things fast.
-          </p>
-          <p>
-            I care about correctness first and performance second, because you
-            cannot optimize what is wrong. I am drawn to problems where
-            efficiency has real consequences: compilers, memory systems,
-            algorithms under genuine constraints.
-          </p>
-        </section>
+      <button
+        className="theme-toggle"
+        onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+        aria-label="Toggle color theme"
+      >
+        {theme === "light" ? "☾" : "☀"}
+      </button>
 
-        <hr />
-
-        <section>
-          <h2>Specialization</h2>
-          <p>
-            Systems programming in C and C++. My focus is performance-critical
-            code: cache-aware data structures, SIMD, profile-guided optimization,
-            and the discipline of measuring before guessing. I am comfortable
-            with manual memory management, undefined behavior, and the space
-            between what you write and what the machine actually executes.
-          </p>
-        </section>
-
-        <section>
-          <h2>Education</h2>
-          <p>
-            University of Southern California, Los Angeles.<br />
-            B.S. Computer Science &mdash; Junior, expected graduation 2028.<br />
-            Coursework: Data Structures &amp; Algorithms, Computer Systems,
-            Operating Systems, Programming Languages, Discrete Mathematics.
-          </p>
-        </section>
-
-        <hr />
-
-        <section>
-          <h2>Projects</h2>
-          <div className="project-list">
-            {projects.map((project) => (
-              <div key={project.id} className="project-entry">
-                <h3>{project.title}</h3>
-                <p className="project-meta">{project.meta}</p>
-                <p>{project.description}</p>
-                {project.demo ? (
-                  <iframe
-                    src={project.demo}
-                    className="demo-iframe"
-                    title={`${project.title} live demo`}
-                    allow="keyboard"
-                  />
-                ) : (
-                  <div className="demo-placeholder">live demo</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <hr />
-
-        <section>
-          <h2>Contact</h2>
-          <ul className="contact-links">
-            <li>
-              <a href="mailto:arjunkhullar2006@gmail.com">email</a>
-            </li>
-            <li>
-              <a href="https://github.com/ajkhullar" target="_blank" rel="noopener noreferrer">
-                github
-              </a>
-            </li>
-          </ul>
-        </section>
+      {/* ─── ASCII animation goes here ───────────────────────────── */}
+      <div className="stage">
+        <pre id="ascii-art" className="ascii-art" aria-hidden="true">
+          {/* replace with your ASCII animation */}
+        </pre>
       </div>
-    </>
+
+      <footer className="footer">
+        <span className="copyright">© ajkhullar</span>
+      </footer>
+    </main>
   );
 }

@@ -4,130 +4,135 @@
   padding: 0;
 }
 
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #6b6b6b;
+  --accent: #16a34a;
+}
+
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --fg: #eaeaea;
+  --muted: #888888;
+  --accent: #22c55e;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: #000;
-  color: #fff;
-  font-family: var(--font-garamond), "Times New Roman", serif;
-  font-size: 1.2rem;
-  line-height: 1.8;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: #fff;
-  z-index: 100;
+/* ─── Page frame ──────────────────────────────────────────────── */
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  padding: 2.5rem;
 }
 
-.container {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 5rem 2rem 8rem;
+/* ─── Masthead (top-left: name, tagline, links) ───────────────── */
+
+.masthead {
+  position: relative;
+  z-index: 2;
 }
 
-h1 {
-  font-family: var(--font-garamond), serif;
-  font-size: 3rem;
-  font-weight: normal;
+.name {
+  font-size: 2rem;
+  font-weight: 500;
   letter-spacing: -0.01em;
-  margin-bottom: 0.5rem;
+  line-height: 1.15;
 }
 
-.subtitle {
+.tagline {
+  color: var(--muted);
   font-size: 1rem;
-  font-style: italic;
-  color: #777;
+  margin-top: 0.15rem;
+  margin-bottom: 1.75rem;
 }
 
-hr {
-  border: none;
-  border-top: 1px solid #1e1e1e;
-  margin: 3rem 0;
-}
-
-section {
-  margin-bottom: 3rem;
-}
-
-h2 {
-  font-size: 0.7rem;
-  font-weight: normal;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: #555;
-  margin-bottom: 1.25rem;
-}
-
-p {
-  margin-bottom: 1.25rem;
-}
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-a {
-  color: #fff;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-a:hover {
-  opacity: 0.55;
-}
-
-.project-list {
+.links {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  align-items: flex-start;
+  gap: 0.55rem;
 }
 
-.project-entry h3 {
-  font-size: 1.125rem;
-  font-weight: normal;
-  margin-bottom: 0.35rem;
+.links a {
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: opacity 0.15s ease;
 }
 
-.project-meta {
-  font-size: 0.9rem;
-  color: #666;
-  font-style: italic;
-  margin-bottom: 1rem;
+.links a:hover {
+  opacity: 0.5;
 }
 
-.demo-placeholder {
-  border: 1px dashed #2a2a2a;
-  padding: 3rem 1.5rem;
-  text-align: center;
-  color: #3a3a3a;
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-style: normal;
-  font-family: "Times New Roman", Times, serif;
-}
+/* ─── Theme toggle (top-right) ────────────────────────────────── */
 
-.demo-iframe {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+.theme-toggle {
+  position: absolute;
+  top: 2.5rem;
+  right: 2.5rem;
+  z-index: 3;
+  background: none;
   border: none;
-  background: #000;
+  color: var(--fg);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
 }
 
-.contact-links {
-  list-style: none;
+.theme-toggle:hover {
+  opacity: 1;
+}
+
+/* ─── Center stage for the ASCII animation ────────────────────── */
+
+.stage {
+  position: fixed;
+  inset: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
 }
 
-header {
-  margin-bottom: 3.5rem;
+.ascii-art {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  color: var(--accent);
+  white-space: pre;
+  text-align: center;
+}
+
+/* ─── Footer ──────────────────────────────────────────────────── */
+
+.footer {
+  position: fixed;
+  left: 2.5rem;
+  bottom: 2rem;
+  z-index: 2;
+}
+
+.copyright {
+  color: var(--muted);
+  font-size: 0.8rem;
 }
