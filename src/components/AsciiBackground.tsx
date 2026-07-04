@@ -307,7 +307,7 @@ export default function AsciiBackground() {
         out += String.fromCharCode(...screen.subarray(r * W, r * W + W));
         if (r < H - 1) out += "\n";
       }
-      pre.textContent = out;
+      pre!.textContent = out;
 
       A += DA;
       B += DB;
