@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import AsciiBackground from "@/components/AsciiBackground";
 
 // Left-column links. Add/remove freely — order is preserved.
 const links = [
-  { label: "GitHub", href: "https://github.com/ajr-khll" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/aj-khullar" },
+  { label: "Github", href: "https://github.com/ajr-khll" },
+  { label: "Linkedin", href: "https://linkedin.com/in/aj-khullar" },
+  { label: "Mobius", href: "https://mobius.ink" },
   { label: "Email", href: "mailto:arjunkhu@usc.edu" },
 ];
 
@@ -30,7 +32,7 @@ export default function Home() {
     <main className="page">
       <header className="masthead">
         <h1 className="name">AJ Khullar</h1>
-        <p className="tagline">CS @ USC · Systems + Performance</p>
+        <p className="tagline">CS @ USC · Performant Programming, Automation</p>
 
         <nav className="links">
           {links.map((link) => (
@@ -54,11 +56,9 @@ export default function Home() {
         {theme === "light" ? "☾" : "☀"}
       </button>
 
-      {/* ─── ASCII animation goes here ───────────────────────────── */}
+      {/* ─── ASCII animation (ported from shapes.c) ──────────────── */}
       <div className="stage">
-        <pre id="ascii-art" className="ascii-art" aria-hidden="true">
-          {/* replace with your ASCII animation */}
-        </pre>
+        <AsciiBackground />
       </div>
 
       <footer className="footer">
