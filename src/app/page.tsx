@@ -7,6 +7,7 @@ import AsciiBackground from "@/components/AsciiBackground";
 const links = [
   { label: "Github", href: "https://github.com/ajr-khll" },
   { label: "Linkedin", href: "https://linkedin.com/in/aj-khullar" },
+  { label: "X", href: "https://x.com/ajrkhll" },
   { label: "Mobius", href: "https://mobius.ink" },
   { label: "Email", href: "mailto:arjunkhu@usc.edu" },
 ];
