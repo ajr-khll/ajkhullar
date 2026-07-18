@@ -9,6 +9,7 @@ const links = [
   { label: "Linkedin", href: "https://linkedin.com/in/aj-khullar" },
   { label: "X", href: "https://x.com/ajrkhll" },
   { label: "Mobius", href: "https://mobius.ink" },
+  { label: "Ghostty Config CLI", href: "https://github.com/ajr-khll/ghostty-config-cli" },
   { label: "Email", href: "mailto:arjunkhu@usc.edu" },
 ];
 
