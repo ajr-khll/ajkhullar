@@ -5,12 +5,7 @@ import DecryptedText from "@/components/reactbits/DecryptedText";
 import FadeContent from "@/components/reactbits/FadeContent";
 import { useReducedMotion } from "@/components/reactbits/useReducedMotion";
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import WhisprdMenu from "./WhisprdMenu";
 
 const REPO = "https://github.com/ajr-khll/linux-transcription";
 
@@ -313,7 +308,6 @@ export default function WhisprdApp() {
 
   return (
     <div className="whisprd" ref={rootRef}>
-     <TooltipProvider delayDuration={150}>
       <header className="top">
         <div className="wrap top-in">
           <span className="sdot" aria-hidden="true"></span>
@@ -332,6 +326,10 @@ export default function WhisprdApp() {
 
       <section className="hero">
         <div className="wrap">
+          <div className="hero-eyebrow">
+            <Badge variant="shipped">pre-release</Badge>
+            <span>dictation for linux · gpl-3.0</span>
+          </div>
           <h1>
             Hold a key. Speak. The words land where you were{" "}
             <em>
@@ -346,9 +344,9 @@ export default function WhisprdApp() {
             </em>
           </h1>
           <p className="hero-sub">
-            whisprd is a small daemon for Linux. Press and hold your hotkey,
-            talk, let go — the transcript is typed into whatever window has
-            focus. No window to switch to, nothing to paste.
+            A small daemon for Linux. Hold your hotkey, talk, let go — the
+            transcript is typed into whatever window has focus. Nothing to switch
+            to, nothing to paste.
           </p>
           <div className="cta">
             <a className="btn btn-fill" href={REPO}>
@@ -376,9 +374,7 @@ export default function WhisprdApp() {
                 </div>
                 <p className="hint">
                   Hold the button, or the real <kbd>Right Ctrl</kbd> on your
-                  keyboard. Let go to hear back. Tap it and release fast — under
-                  100&nbsp;ms is thrown away as a stray tap, same as the daemon
-                  does.
+                  keyboard. Let go to hear back.
                 </p>
               </div>
               <div className="field">
@@ -418,205 +414,49 @@ export default function WhisprdApp() {
         </div>
       </section>
 
-      <section className="sec">
-        <div className="wrap sec-in">
+      <section className="sec gui-sec">
+        <div className="wrap">
           <div className="tag">
-            the&nbsp;<b>signal path</b>
+            the&nbsp;<b>app</b>
           </div>
-          <div className="body-col">
-            <h2>
-              Four steps, and none of them is a window you have to look at.
-            </h2>
-            <p className="lede">
-              The daemon holds no model and does no inference. It captures
-              audio, posts it to OpenAI, and types back the answer. That is the
-              whole program.
-            </p>
-            <div className="path">
-              <div className="wstage">
-                <div className="wstage-n">01</div>
-                <div>
-                  <h3>evdev watches one key</h3>
-                  <p>
-                    An epoll loop reads <code>/dev/input/event*</code>. The input
-                    thread never blocks — it flips an atomic and goes straight
-                    back to waiting, so release is instant however slow the
-                    network is.
-                  </p>
-                </div>
-              </div>
-              <div className="wstage">
-                <div className="wstage-n">02</div>
-                <div>
-                  <h3>Capture runs the whole time</h3>
-                  <p>
-                    The stream is open at 16 kHz mono S16 — exactly what Whisper
-                    wants, so nothing is ever resampled. A 250 ms rolling
-                    pre-roll is glued to the front of each utterance, which is
-                    how the first consonant survives the gap between your finger
-                    and the daemon noticing.
-                  </p>
-                </div>
-              </div>
-              <div className="wstage">
-                <div className="wstage-n">03</div>
-                <div>
-                  <h3>One multipart POST</h3>
-                  <p>
-                    The audio becomes a WAV in memory and goes to{" "}
-                    <code>/audio/transcriptions</code>. The queue is bounded and
-                    drops the oldest, so a slow endpoint can stall a transcript
-                    but never the microphone.
-                  </p>
-                </div>
-              </div>
-              <div className="wstage">
-                <div className="wstage-n">04</div>
-                <div>
-                  <h3>Keystrokes, not a clipboard</h3>
-                  <p>
-                    Where the compositor allows it, whisprd types the text as
-                    real key events. The virtual keyboard carries its own
-                    keymap, so your layout does not matter and no modifier
-                    bookkeeping is needed.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h2>One window: your settings, and everything you have said.</h2>
+          <FadeContent blur duration={760} threshold={0.12}>
+            <WhisprdMenu />
+          </FadeContent>
+          <p className="gui-cap">
+            whisprd-menu — pick a mic by watching it move, set your key, read back
+            past sessions. GJS · GTK4.
+          </p>
         </div>
       </section>
 
       <section className="sec">
         <div className="wrap sec-in">
           <div className="tag">
-            read&nbsp;<b>this first</b>
+            how&nbsp;<b>it works</b>
           </div>
           <div className="body-col">
-            <FadeContent className="warn" blur duration={700} threshold={0.2}>
-              <h2>Everything you dictate is uploaded to OpenAI.</h2>
+            <FadeContent className="cloud" blur duration={700} threshold={0.2}>
+              <h2>It transcribes in the cloud — your key, your account.</h2>
+              <div className="flow" aria-hidden="true">
+                <span className="flow-node">your voice</span>
+                <span className="flow-arrow">→</span>
+                <span className="flow-node flow-node-net">api.openai.com</span>
+                <span className="flow-arrow">→</span>
+                <span className="flow-node">text in your window</span>
+              </div>
               <p>
-                That is the design, not a footnote. whisprd is a thin client,
-                not a local transcriber: you bring an API key and every utterance
-                becomes a paid API call. Do not speak anything into it you would
-                not paste into a web form.
+                whisprd runs no model on your machine. Each clip goes to OpenAI
+                over your own API key and the words come straight back — the trip
+                audio takes in any Whisper app. whisprd keeps no copy of its own
+                unless you switch history on.
               </p>
-              <p>
-                Pointing it at a local OpenAI-compatible server works — the
-                request is identical either way — but that path is untested and
-                unsupported.
+              <p className="cloud-note">
+                The audio does leave your machine, so treat it like any web
+                service: great for notes and commit messages, not the place for
+                passwords.
               </p>
             </FadeContent>
-          </div>
-        </div>
-      </section>
-
-      <section className="sec">
-        <div className="wrap sec-in">
-          <div className="tag">
-            three&nbsp;<b>backends</b>
-          </div>
-          <div className="body-col">
-            <h2>
-              Typing into a Wayland window is three different problems, so there
-              are three answers.
-            </h2>
-            <p className="lede">
-              Auto-detection takes the first one that probes clean and prefers
-              real typing. Override it with <code>backend =</code> in the config.
-            </p>
-            <div className="grid3">
-              <div className="field cell">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="legend legend-tip">wlr-vk</span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    zwlr_virtual_keyboard_manager_v1 · wlroots only
-                  </TooltipContent>
-                </Tooltip>
-                <p className="cell-where">hyprland · sway · river</p>
-                <p>
-                  Uploads its own keymap where every character it needs sits
-                  alone on its own key, so your active layout is irrelevant.
-                </p>
-                <div className="cost">
-                  <b>cost:</b> the manager global exists only on wlroots
-                </div>
-              </div>
-              <div className="field cell">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="legend legend-tip">uinput</span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    /dev/uinput + libxkbcommon · types below the compositor
-                  </TooltipContent>
-                </Tooltip>
-                <p className="cell-where">gnome · kde</p>
-                <p>
-                  Injects raw keycodes below the compositor, which then reads
-                  them through your layout. libxkbcommon works out which keycode
-                  and level makes each character, and the two cancel out.
-                </p>
-                <div className="cost">
-                  <b>cost:</b> <code>layout</code> must match your active one
-                </div>
-              </div>
-              <div className="field cell">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="legend legend-tip">clipboard</span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    wl-clipboard + a paste chord · lands anywhere, x11 too
-                  </TooltipContent>
-                </Tooltip>
-                <p className="cell-where">anywhere · x11 too</p>
-                <p>
-                  Sets the clipboard and sends a paste chord. Layout-agnostic and
-                  works on everything. The fallback that always lands.
-                </p>
-                <div className="cost">
-                  <b>cost:</b> your clipboard is overwritten
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="sec">
-        <div className="wrap sec-in">
-          <div className="tag">
-            the&nbsp;<b>panel</b>
-          </div>
-          <div className="body-col">
-            <h2>
-              Pick a microphone by watching a bar move, not by trusting a device
-              name.
-            </h2>
-            <p>
-              <code>whisprd-menu</code> is the settings and history panel — GJS
-              and GTK4, sharing nothing with the daemon but a config file, a{" "}
-              <code>SIGHUP</code> and the journal. The daemon keeps no GUI
-              dependencies and still runs headless.
-            </p>
-            <p>
-              It carries a live level meter on the selected source, because a
-              wrong source is the single biggest cause of nonsense transcripts.
-              Whisper does not answer silence with an empty string; it answers
-              with caption boilerplate memorised from its training data —{" "}
-              <em>Thank you.</em>, <em>Subtitles by the Amara.org community</em>,
-              a stray copyright line. whisprd refuses to send anything peaking
-              below 2 % of full scale and tells you the level it measured.
-            </p>
-            <p>
-              With <code>history = on</code> it also keeps past sessions, in{" "}
-              <code>0600</code> files inside a <code>0700</code> directory. It is
-              off by default — a verbatim record of everything said at a machine
-              should be something you switch on, not something you find later.
-            </p>
           </div>
         </div>
       </section>
@@ -630,9 +470,7 @@ export default function WhisprdApp() {
             <h2>Clone it and run the installer.</h2>
             <p className="lede">
               You need an OpenAI API key first — whisprd will not start without
-              one. Fedora, Debian/Ubuntu and Arch are handled; anything else
-              falls through with a warning and lets the build name what is
-              missing.
+              one. Fedora, Debian/Ubuntu and Arch are handled.
             </p>
             <div className="code">
               <div className="code-h">
@@ -653,124 +491,10 @@ export default function WhisprdApp() {
               </pre>
             </div>
             <p>
-              It installs dependencies, builds, adds you to the{" "}
-              <code>input</code> group, seeds the config, asks for your key and
-              enables the systemd user service.{" "}
+              It builds, adds you to the <code>input</code> group, seeds the
+              config and enables the systemd user service.{" "}
               <strong>Log out and back in afterwards</strong> — group membership
-              is read when your session starts, so until then the service cannot
-              open <code>/dev/uinput</code>.
-            </p>
-            <p>
-              It is deliberately not a <code>curl | bash</code> one-liner. This
-              needs sudo, and piping an unread script into a shell that then asks
-              for your password is a habit worth not teaching.
-            </p>
-            <div className="code">
-              <div className="code-h">
-                <span>then</span>
-                <CopyButton
-                  text={
-                    'whisprd --list-sources\nwhisprd --say "hello"\nwhisprd-menu'
-                  }
-                />
-              </div>
-              <pre>
-                <span className="p">$</span>
-                {" whisprd --list-sources   "}
-                <span className="c"># samples each device, prints its peak level</span>
-                {"\n"}
-                <span className="p">$</span>
-                {' whisprd --say "hello"    '}
-                <span className="c"># test injection without speaking</span>
-                {"\n"}
-                <span className="p">$</span>
-                {" whisprd-menu             "}
-                <span className="c"># settings and history</span>
-              </pre>
-            </div>
-            <p>
-              Do not run it as root. It reads <code>/dev/input/event*</code> and
-              writes <code>/dev/uinput</code>; on most distributions both are{" "}
-              <code>root:input</code>, so joining the group is enough.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="sec">
-        <div className="wrap sec-in">
-          <div className="tag">
-            honest&nbsp;<b>status</b>
-          </div>
-          <div className="body-col">
-            <h2>What is built, and what is not.</h2>
-            <p className="lede">
-              This is pre-release. <code>TODO.md</code> in the repo carries the
-              full list, including the gaps that matter before anyone calls it
-              1.0.
-            </p>
-            <div className="rows">
-              <div className="row">
-                <span className="row-dot">●</span>
-                <span className="row-t">
-                  Config, evdev hotkey, epoll input loop
-                </span>
-                <Badge variant="shipped" className="row-badge">implemented</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot">●</span>
-                <span className="row-t">
-                  Persistent 16 kHz capture and gating
-                </span>
-                <Badge variant="shipped" className="row-badge">implemented</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot">●</span>
-                <span className="row-t">
-                  In-memory WAV, multipart POST, JSON parse
-                </span>
-                <Badge variant="shipped" className="row-badge">implemented</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot">●</span>
-                <span className="row-t">
-                  <code>wlr-vk</code> backend — Hyprland, Sway, river, Wayfire
-                </span>
-                <Badge variant="shipped" className="row-badge">implemented</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot">●</span>
-                <span className="row-t">
-                  <code>clipboard</code> backend — universal fallback
-                </span>
-                <Badge variant="shipped" className="row-badge">implemented</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot">●</span>
-                <span className="row-t">
-                  <code>uinput</code> backend — GNOME, KDE
-                </span>
-                <Badge variant="shipped" className="row-badge">implemented</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot idle">○</span>
-                <span className="row-t">
-                  <code>x11-xtest</code> backend
-                </span>
-                <Badge variant="planned" className="row-badge">not yet</Badge>
-              </div>
-              <div className="row">
-                <span className="row-dot idle">○</span>
-                <span className="row-t">Spend limit on API calls</span>
-                <Badge variant="planned" className="row-badge">not yet</Badge>
-              </div>
-            </div>
-            <p style={{ marginTop: "1.3rem" }}>
-              Known gaps worth naming: the <code>uinput</code> backend drops
-              characters needing dead-key or compose sequences, the clipboard
-              backend does not restore what it overwrote, and one paste chord
-              applies to every app — so a config tuned for terminals behaves
-              oddly everywhere else.
+              is only read when your session starts.
             </p>
           </div>
         </div>
@@ -796,7 +520,6 @@ export default function WhisprdApp() {
           </div>
         </div>
       </footer>
-     </TooltipProvider>
     </div>
   );
 }
