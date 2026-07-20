@@ -191,3 +191,15 @@ pre .p{color:var(--acc)}
 .foot a:hover{color:var(--acc-2)}
 .foot-row{display:flex;flex-wrap:wrap;gap:.2rem 1.6rem}
 .fkey{color:var(--acc);font-weight:600}
+
+/* ---- reactbits + shadcn accents ---- */
+/* DecryptedText: unresolved glyphs sit in a dimmer shade of the accent, so the
+   hero line reads as noise settling into the red emphasis it already had. */
+.dt-enc{color:var(--acc-3)}
+/* Backend legends double as tooltip triggers — a quiet dotted underline hints it. */
+.legend-tip{cursor:help;text-decoration:underline dotted;text-decoration-color:var(--dim-2);
+  text-underline-offset:3px}
+.legend-tip:hover{color:var(--acc)}
+/* shadcn Badge, sitting in the mono status list. */
+.row{align-items:center}
+.row-badge{flex:none;font-family:var(--mono);font-weight:400;letter-spacing:.04em}

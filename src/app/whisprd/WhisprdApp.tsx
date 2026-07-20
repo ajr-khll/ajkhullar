@@ -1,6 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import DecryptedText from "@/components/reactbits/DecryptedText";
+import FadeContent from "@/components/reactbits/FadeContent";
+import { useReducedMotion } from "@/components/reactbits/useReducedMotion";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const REPO = "https://github.com/ajr-khll/linux-transcription";
 
@@ -31,6 +41,7 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export default function WhisprdApp() {
+  const reduced = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const keyRef = useRef<HTMLButtonElement>(null);
   const meterRef = useRef<HTMLCanvasElement>(null);
@@ -302,6 +313,7 @@ export default function WhisprdApp() {
 
   return (
     <div className="whisprd" ref={rootRef}>
+     <TooltipProvider delayDuration={150}>
       <header className="top">
         <div className="wrap top-in">
           <span className="sdot" aria-hidden="true"></span>
@@ -322,7 +334,16 @@ export default function WhisprdApp() {
         <div className="wrap">
           <h1>
             Hold a key. Speak. The words land where you were{" "}
-            <em>already typing.</em>
+            <em>
+              <DecryptedText
+                text="already typing."
+                animateOn={reduced ? "hover" : "view"}
+                sequential
+                speed={40}
+                revealDirection="start"
+                encryptedClassName="dt-enc"
+              />
+            </em>
           </h1>
           <p className="hero-sub">
             whisprd is a small daemon for Linux. Press and hold your hotkey,
@@ -338,7 +359,7 @@ export default function WhisprdApp() {
             </a>
           </div>
 
-          <div className="demo panel">
+          <FadeContent className="demo panel" blur duration={820} threshold={0.15}>
             <div className="demo-l">
               <div>
                 <div className="field">
@@ -393,7 +414,7 @@ export default function WhisprdApp() {
                 </span>
               </div>
             </div>
-          </div>
+          </FadeContent>
         </div>
       </section>
 
@@ -472,7 +493,7 @@ export default function WhisprdApp() {
             read&nbsp;<b>this first</b>
           </div>
           <div className="body-col">
-            <div className="warn">
+            <FadeContent className="warn" blur duration={700} threshold={0.2}>
               <h2>Everything you dictate is uploaded to OpenAI.</h2>
               <p>
                 That is the design, not a footnote. whisprd is a thin client,
@@ -485,7 +506,7 @@ export default function WhisprdApp() {
                 request is identical either way — but that path is untested and
                 unsupported.
               </p>
-            </div>
+            </FadeContent>
           </div>
         </div>
       </section>
@@ -506,7 +527,14 @@ export default function WhisprdApp() {
             </p>
             <div className="grid3">
               <div className="field cell">
-                <span className="legend">wlr-vk</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="legend legend-tip">wlr-vk</span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    zwlr_virtual_keyboard_manager_v1 · wlroots only
+                  </TooltipContent>
+                </Tooltip>
                 <p className="cell-where">hyprland · sway · river</p>
                 <p>
                   Uploads its own keymap where every character it needs sits
@@ -517,7 +545,14 @@ export default function WhisprdApp() {
                 </div>
               </div>
               <div className="field cell">
-                <span className="legend">uinput</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="legend legend-tip">uinput</span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    /dev/uinput + libxkbcommon · types below the compositor
+                  </TooltipContent>
+                </Tooltip>
                 <p className="cell-where">gnome · kde</p>
                 <p>
                   Injects raw keycodes below the compositor, which then reads
@@ -529,7 +564,14 @@ export default function WhisprdApp() {
                 </div>
               </div>
               <div className="field cell">
-                <span className="legend">clipboard</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="legend legend-tip">clipboard</span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    wl-clipboard + a paste chord · lands anywhere, x11 too
+                  </TooltipContent>
+                </Tooltip>
                 <p className="cell-where">anywhere · x11 too</p>
                 <p>
                   Sets the clipboard and sends a paste chord. Layout-agnostic and
@@ -673,54 +715,54 @@ export default function WhisprdApp() {
                 <span className="row-t">
                   Config, evdev hotkey, epoll input loop
                 </span>
-                <span className="row-s">implemented</span>
+                <Badge variant="shipped" className="row-badge">implemented</Badge>
               </div>
               <div className="row">
                 <span className="row-dot">●</span>
                 <span className="row-t">
                   Persistent 16 kHz capture and gating
                 </span>
-                <span className="row-s">implemented</span>
+                <Badge variant="shipped" className="row-badge">implemented</Badge>
               </div>
               <div className="row">
                 <span className="row-dot">●</span>
                 <span className="row-t">
                   In-memory WAV, multipart POST, JSON parse
                 </span>
-                <span className="row-s">implemented</span>
+                <Badge variant="shipped" className="row-badge">implemented</Badge>
               </div>
               <div className="row">
                 <span className="row-dot">●</span>
                 <span className="row-t">
                   <code>wlr-vk</code> backend — Hyprland, Sway, river, Wayfire
                 </span>
-                <span className="row-s">implemented</span>
+                <Badge variant="shipped" className="row-badge">implemented</Badge>
               </div>
               <div className="row">
                 <span className="row-dot">●</span>
                 <span className="row-t">
                   <code>clipboard</code> backend — universal fallback
                 </span>
-                <span className="row-s">implemented</span>
+                <Badge variant="shipped" className="row-badge">implemented</Badge>
               </div>
               <div className="row">
                 <span className="row-dot">●</span>
                 <span className="row-t">
                   <code>uinput</code> backend — GNOME, KDE
                 </span>
-                <span className="row-s">implemented</span>
+                <Badge variant="shipped" className="row-badge">implemented</Badge>
               </div>
               <div className="row">
                 <span className="row-dot idle">○</span>
                 <span className="row-t">
                   <code>x11-xtest</code> backend
                 </span>
-                <span className="row-s no">not yet</span>
+                <Badge variant="planned" className="row-badge">not yet</Badge>
               </div>
               <div className="row">
                 <span className="row-dot idle">○</span>
                 <span className="row-t">Spend limit on API calls</span>
-                <span className="row-s no">not yet</span>
+                <Badge variant="planned" className="row-badge">not yet</Badge>
               </div>
             </div>
             <p style={{ marginTop: "1.3rem" }}>
@@ -754,6 +796,7 @@ export default function WhisprdApp() {
           </div>
         </div>
       </footer>
+     </TooltipProvider>
     </div>
   );
 }

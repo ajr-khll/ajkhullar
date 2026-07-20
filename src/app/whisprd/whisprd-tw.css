@@ -1,0 +1,35 @@
+/* Tailwind + shadcn token layer — scoped to the /whisprd route only.
+   This is the one file in the project that carries @tailwind directives, and it
+   is imported solely by src/app/whisprd/page.tsx, so preflight and the generated
+   utilities never reach the System 7 homepage. Tokens map shadcn's names onto the
+   whisprd palette (see whisprd.css) so Badge/Tooltip read as part of the page. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 5%;
+  --foreground: 0 0% 85%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 85%;
+  --popover: 0 0% 9%;
+  --popover-foreground: 0 0% 85%;
+  --primary: 0 100% 65%;
+  --primary-foreground: 0 0% 5%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 85%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 54%;
+  --accent: 0 0% 14%;
+  --accent-foreground: 0 0% 85%;
+  --destructive: 0 100% 65%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 0 100% 65%;
+  --radius: 0.5rem;
+  /* Mirror the whisprd fonts under names the portalled Tooltip (rendered on
+     document.body, outside .whisprd) can still resolve. */
+  --wui-mono: "Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --wui-sans: "Plex Sans", system-ui, sans-serif;
+}

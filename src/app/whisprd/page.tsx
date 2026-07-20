@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import WhisprdApp from "./WhisprdApp";
 import "./whisprd.css";
+import "./whisprd-tw.css";
 
 export const metadata: Metadata = {
   title: "whisprd — hold-to-talk dictation for Linux",
