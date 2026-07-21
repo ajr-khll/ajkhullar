@@ -21,9 +21,13 @@
 }
 
 *{box-sizing:border-box}
+/* The page is rem/em-based, so one lever scales the whole thing — type, spacing
+   and the max-width column together. Scoped to /whisprd: this file only loads on
+   that route, so the System 7 homepage keeps its own scale. */
+html{font-size:125%}
 .whisprd{
   margin:0; background:var(--bg); color:var(--text);
-  font-family:var(--sans); font-size:16px; line-height:1.66;
+  font-family:var(--sans); font-size:1rem; line-height:1.66;
   -webkit-font-smoothing:antialiased; min-height:100dvh;
 }
 .whisprd a{color:inherit}
@@ -219,63 +223,65 @@ pre .p{color:var(--acc)}
    is identical to this page's, so every colour resolves through the same vars. */
 .gui-sec .gui-cap{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
   color:var(--dim-3);text-align:center;margin:1rem auto 0}
-.gui{max-width:940px;margin:1.5rem auto 0;border:1px solid var(--line);border-radius:8px;
-  background:var(--bg);font-family:var(--mono);font-size:clamp(11px,1.35vw,13px);
+/* Sizes are em/rem so the panel scales as one piece with the page's root lever;
+   hairline borders stay 1px on purpose. */
+.gui{max-width:48rem;margin:1.5rem auto 0;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);font-family:var(--mono);font-size:clamp(.72rem,1.05vw,.86rem);
   color:var(--text);overflow:hidden;line-height:1.5}
 .gui-body{display:flex;align-items:stretch}
 .gui-settings{flex:0 0 42%;min-width:0;border-right:1px solid var(--line);
-  padding:14px;display:flex;flex-direction:column;gap:11px}
-.gui-history{flex:1;min-width:0;padding:14px;display:flex;flex-direction:column;gap:9px}
+  padding:1.1em;display:flex;flex-direction:column;gap:.85em}
+.gui-history{flex:1;min-width:0;padding:1.1em;display:flex;flex-direction:column;gap:.7em}
 @media(max-width:640px){
   .gui-body{flex-direction:column}
   .gui-settings{flex:none;border-right:0;border-bottom:1px solid var(--line)}
 }
 .gui-grow{flex:1}
-.gui-row{display:flex;align-items:center;gap:8px}
+.gui-row{display:flex;align-items:center;gap:.6em}
 
-.gui-header{display:flex;flex-direction:column;gap:3px}
-.gui-host{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.gui-header{display:flex;flex-direction:column;gap:.25em}
+.gui-host{display:flex;align-items:center;gap:.4em;flex-wrap:wrap}
 .gui-dim3,.gui-sep{color:var(--dim-3)}
 .gui-status-dot{color:var(--acc);font-size:.75em}
 .gui-cfg-path{color:var(--dim-3);font-size:.85em}
 
-.gui-field{border:1px solid var(--line-2);border-radius:4px;padding:9px 10px;margin:0;min-width:0}
-.gui-field>legend{color:var(--acc-2);font-size:.78em;letter-spacing:.14em;padding:0 6px}
+.gui-field{border:1px solid var(--line-2);border-radius:4px;padding:.7em .8em;margin:0;min-width:0}
+.gui-field>legend{color:var(--acc-2);font-size:.78em;letter-spacing:.14em;padding:0 .5em}
 .gui-field>legend::before{content:"─ "}
 .gui-field>legend::after{content:" ─"}
 
-.gui-chip{border:1px solid var(--acc);border-radius:3px;color:var(--acc-2);padding:1px 6px;font-size:.85em}
+.gui-chip{border:1px solid var(--acc);border-radius:3px;color:var(--acc-2);padding:.1em .45em;font-size:.85em}
 .gui-btn{border:1px solid var(--acc);border-radius:3px;color:var(--acc);background:transparent;
-  padding:2px 8px;font-size:.85em;font-family:inherit;cursor:default}
-.gui-sel{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg);
-  border:1px solid var(--line-2);border-radius:2px;color:var(--text-hi);padding:3px 8px;font-size:.95em}
+  padding:.15em .6em;font-size:.85em;font-family:inherit;cursor:default}
+.gui-sel{display:flex;align-items:center;justify-content:space-between;gap:.6em;background:var(--bg);
+  border:1px solid var(--line-2);border-radius:2px;color:var(--text-hi);padding:.28em .6em;font-size:.95em}
 .gui-caret{color:var(--dim-3)}
 .gui-key{color:var(--text-hi);letter-spacing:.02em}
 .gui-link{color:var(--acc-2);font-size:.85em}
 
-.gui-meter{display:flex;align-items:flex-end;gap:2px;height:26px;margin-top:9px}
+.gui-meter{display:flex;align-items:flex-end;gap:.15em;height:2em;margin-top:.7em}
 .gui-bar{flex:1;background:var(--acc);min-height:1px}
 
 .gui-h-title{color:var(--acc-2)}
 .gui-h-grep{color:var(--dim-3)}
 .gui-count{color:var(--dim-2)}
 .gui-rule{height:1px;background:var(--rule-soft)}
-.gui-feed{display:flex;flex-direction:column;gap:3px}
+.gui-feed{display:flex;flex-direction:column;gap:.25em}
 .gui-feed-cmd{color:var(--dim-3)}
-.gui-feed-row{display:flex;gap:8px}
+.gui-feed-row{display:flex;gap:.6em}
 .gui-ts{color:var(--acc-2);flex:none}
 .gui-text{color:var(--text);min-width:0}
 .gui-cursor{color:var(--acc);animation:blink 1.1s steps(1) infinite;align-self:flex-start}
 .gui-divider{color:var(--line-3);text-align:center;font-size:.9em}
-.gui-sessions{display:flex;flex-direction:column;gap:2px}
-.gui-sess-row{display:flex;align-items:baseline;gap:10px;padding:2px 4px;border-radius:3px}
+.gui-sessions{display:flex;flex-direction:column;gap:.15em}
+.gui-sess-row{display:flex;align-items:baseline;gap:.75em;padding:.15em .3em;border-radius:3px}
 .gui-sess-row.selected{background:var(--bar)}
 .gui-sess-time{color:var(--acc-2);flex:none}
 .gui-sess-name{color:var(--text-hi);min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gui-sess-snip{color:var(--dim-3)}
 .gui-sess-words{color:var(--dim-2);flex:none}
 
-.gui-footer{display:flex;align-items:center;gap:14px;background:var(--bar);
-  border-top:1px solid var(--line);padding:6px 12px;font-size:.85em;color:var(--dim)}
-.gui-fk{display:flex;gap:4px;align-items:center}
+.gui-footer{display:flex;align-items:center;gap:1em;background:var(--bar);
+  border-top:1px solid var(--line);padding:.45em .9em;font-size:.85em;color:var(--dim)}
+.gui-fk{display:flex;gap:.3em;align-items:center}
 .gui-fk b{color:var(--acc);font-weight:700}

@@ -357,7 +357,7 @@ export default function WhisprdApp() {
             </a>
           </div>
 
-          <FadeContent className="demo panel" blur duration={820} threshold={0.15}>
+          <FadeContent className="demo panel" blur duration={820}>
             <div className="demo-l">
               <div>
                 <div className="field">
@@ -420,7 +420,7 @@ export default function WhisprdApp() {
             the&nbsp;<b>app</b>
           </div>
           <h2>One window: your settings, and everything you have said.</h2>
-          <FadeContent blur duration={760} threshold={0.12}>
+          <FadeContent blur duration={760}>
             <WhisprdMenu />
           </FadeContent>
           <p className="gui-cap">
@@ -436,7 +436,7 @@ export default function WhisprdApp() {
             how&nbsp;<b>it works</b>
           </div>
           <div className="body-col">
-            <FadeContent className="cloud" blur duration={700} threshold={0.2}>
+            <FadeContent className="cloud" blur duration={700}>
               <h2>It transcribes in the cloud — your key, your account.</h2>
               <div className="flow" aria-hidden="true">
                 <span className="flow-node">your voice</span>
