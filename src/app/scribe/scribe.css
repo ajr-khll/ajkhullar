@@ -7,7 +7,7 @@
 /* Palette lifted from menu/style.css -- design 4b. The panel is the source of
    truth for these values; this page follows it rather than inventing a second
    identity. Single theme, like the panel: it is a dark surface by design. */
-.whisprd{
+.scribe{
   --bg:#0c0c0c; --bar:#151515; --sunk:#0a0a0a;
   --line:#2a2a2a; --line-2:#333333; --line-3:#3a3a3a; --rule-soft:#1e1e1e;
   --text:#c8c8c8; --text-hi:#d8d8d8;
@@ -22,15 +22,15 @@
 
 *{box-sizing:border-box}
 /* The page is rem/em-based, so one lever scales the whole thing — type, spacing
-   and the max-width column together. Scoped to /whisprd: this file only loads on
+   and the max-width column together. Scoped to /scribe: this file only loads on
    that route, so the System 7 homepage keeps its own scale. */
 html{font-size:125%}
-.whisprd{
+.scribe{
   margin:0; background:var(--bg); color:var(--text);
   font-family:var(--sans); font-size:1rem; line-height:1.66;
   -webkit-font-smoothing:antialiased; min-height:100dvh;
 }
-.whisprd a{color:inherit}
+.scribe a{color:inherit}
 :focus-visible{outline:1px solid var(--acc); outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
 
@@ -218,7 +218,7 @@ pre .p{color:var(--acc)}
   color:var(--dim-3)}
 .row-badge{flex:none;font-family:var(--mono);font-weight:400;letter-spacing:.04em}
 
-/* ---- whisprd-menu recreation ------------------------------------------
+/* ---- scribe-menu recreation ------------------------------------------
    Ported from linux-transcription/menu (app.js + style.css). The GTK palette
    is identical to this page's, so every colour resolves through the same vars. */
 .gui-sec .gui-cap{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;

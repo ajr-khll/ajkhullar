@@ -15,7 +15,7 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground",
         outline: "text-foreground",
-        // whisprd-specific: shipped vs still-planned status pills.
+        // scribe-specific: shipped vs still-planned status pills.
         shipped:
           "border-primary/40 bg-primary/10 text-primary",
         planned:

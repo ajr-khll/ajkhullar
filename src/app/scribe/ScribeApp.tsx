@@ -5,7 +5,7 @@ import DecryptedText from "@/components/reactbits/DecryptedText";
 import FadeContent from "@/components/reactbits/FadeContent";
 import { useReducedMotion } from "@/components/reactbits/useReducedMotion";
 import { Badge } from "@/components/ui/badge";
-import WhisprdMenu from "./WhisprdMenu";
+import ScribeMenu from "./ScribeMenu";
 
 const REPO = "https://github.com/ajr-khll/linux-transcription";
 
@@ -35,7 +35,7 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-export default function WhisprdApp() {
+export default function ScribeApp() {
   const reduced = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const keyRef = useRef<HTMLButtonElement>(null);
@@ -47,7 +47,7 @@ export default function WhisprdApp() {
   const wfootRef = useRef<HTMLDivElement>(null);
 
   /* The interactive meter, ported from docs/index.html verbatim in behaviour.
-     The one change: CSS variables now live on the .whisprd wrapper rather than
+     The one change: CSS variables now live on the .scribe wrapper rather than
      :root, so colours are read from rootRef instead of documentElement. */
   useEffect(() => {
     const root = rootRef.current;
@@ -307,11 +307,11 @@ export default function WhisprdApp() {
   }, []);
 
   return (
-    <div className="whisprd" ref={rootRef}>
+    <div className="scribe" ref={rootRef}>
       <header className="top">
         <div className="wrap top-in">
           <span className="sdot" aria-hidden="true"></span>
-          <span className="mark">whisprd</span>
+          <span className="mark">scribe</span>
           <span className="top-sep">·</span>
           <span className="top-meta">hold-to-talk dictation · wayland &amp; x11</span>
           <span className="top-sp"></span>
@@ -421,10 +421,10 @@ export default function WhisprdApp() {
           </div>
           <h2>One window: your settings, and everything you have said.</h2>
           <FadeContent blur duration={760}>
-            <WhisprdMenu />
+            <ScribeMenu />
           </FadeContent>
           <p className="gui-cap">
-            whisprd-menu — pick a mic by watching it move, set your key, read back
+            scribe-menu — pick a mic by watching it move, set your key, read back
             past sessions. GJS · GTK4.
           </p>
         </div>
@@ -446,9 +446,9 @@ export default function WhisprdApp() {
                 <span className="flow-node">text in your window</span>
               </div>
               <p>
-                whisprd runs no model on your machine. Each clip goes to OpenAI
+                scribe runs no model on your machine. Each clip goes to OpenAI
                 over your own API key and the words come straight back — the trip
-                audio takes in any Whisper app. whisprd keeps no copy of its own
+                audio takes in any Whisper app. scribe keeps no copy of its own
                 unless you switch history on.
               </p>
               <p className="cloud-note">
@@ -469,7 +469,7 @@ export default function WhisprdApp() {
           <div className="body-col">
             <h2>Clone it and run the installer.</h2>
             <p className="lede">
-              You need an OpenAI API key first — whisprd will not start without
+              You need an OpenAI API key first — scribe will not start without
               one. Fedora, Debian/Ubuntu and Arch are handled.
             </p>
             <div className="code">

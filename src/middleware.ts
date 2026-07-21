@@ -2,20 +2,20 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Serve the whisprd project page from the whisprd.* subdomain.
+ * Serve the scribe project page from the scribe.* subdomain.
  *
- * whisprd.ajkhullar.com/  -> rewrites to /whisprd  (URL stays on the subdomain)
- * ajkhullar.com/whisprd   -> still works directly, unchanged
+ * scribe.ajkhullar.com/  -> rewrites to /scribe  (URL stays on the subdomain)
+ * ajkhullar.com/scribe   -> still works directly, unchanged
  *
  * Point the DNS + Vercel domain at this project and the same deploy serves both.
  */
 export function middleware(req: NextRequest) {
   const host = (req.headers.get("host") || "").split(":")[0];
 
-  if (host.startsWith("whisprd.")) {
+  if (host.startsWith("scribe.")) {
     const url = req.nextUrl.clone();
     if (url.pathname === "/" || url.pathname === "") {
-      url.pathname = "/whisprd";
+      url.pathname = "/scribe";
       return NextResponse.rewrite(url);
     }
   }

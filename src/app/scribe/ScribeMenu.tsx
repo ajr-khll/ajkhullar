@@ -1,4 +1,4 @@
-/* A faithful recreation of whisprd-menu — the daemon's settings + history panel
+/* A faithful recreation of scribe-menu — the daemon's settings + history panel
    (GJS + GTK4, design "4b"). Layout, palette and copy are ported from the real
    app in linux-transcription/menu (app.js + style.css); the same #0c0c0c/#ff4b4b
    palette the rest of this page already uses, so it renders as the actual thing.
@@ -29,15 +29,15 @@ function Caret() {
   return <span className="gui-caret">▾</span>;
 }
 
-export default function WhisprdMenu() {
+export default function ScribeMenu() {
   return (
-    <div className="gui" role="img" aria-label="The whisprd-menu settings and history panel">
+    <div className="gui" role="img" aria-label="The scribe-menu settings and history panel">
       <div className="gui-body">
         {/* ---- left: settings ---- */}
         <div className="gui-settings">
           <div className="gui-header">
             <div className="gui-host">
-              <span className="gui-host-name">whisprd</span>
+              <span className="gui-host-name">scribe</span>
               <span className="gui-dim3">@linux</span>
               <span className="gui-sep">·</span>
               <span className="gui-status-dot">●</span>
@@ -45,7 +45,7 @@ export default function WhisprdMenu() {
               <span className="gui-sep">·</span>
               <span>pipewire</span>
             </div>
-            <div className="gui-cfg-path">~/.config/whisprd/config.ini</div>
+            <div className="gui-cfg-path">~/.config/scribe/config.ini</div>
           </div>
 
           <fieldset className="gui-field">

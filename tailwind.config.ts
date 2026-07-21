@@ -2,9 +2,9 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 // Tailwind is used minimally here. The System 7 homepage is plain CSS; the only
-// place utilities are emitted is the /whisprd route, which pulls in whisprd-tw.css
+// place utilities are emitted is the /scribe route, which pulls in scribe-tw.css
 // (the sole file carrying @tailwind directives) to power a few shadcn primitives.
-// The theme below maps shadcn's tokens onto the whisprd palette — see whisprd-tw.css.
+// The theme below maps shadcn's tokens onto the scribe palette — see scribe-tw.css.
 const config: Config = {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
