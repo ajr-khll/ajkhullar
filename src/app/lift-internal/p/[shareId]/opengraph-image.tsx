@@ -11,33 +11,38 @@ export const alt = "Lift preset";
 
 const FONTS_DIR = join(process.cwd(), "src/app/lift-internal/p/[shareId]/fonts");
 
-// Mirrors src/constants/theme.ts (colors, gradients) from the Lift app repo —
-// keep in sync if that palette changes.
+// Mirrors src/constants/theme.ts and the Card / AppText components from the
+// Lift app repo — keep in sync if that design system changes.
 const colors = {
   background: "#0B0B0F",
+  card: "#111116",
+  border: "rgba(255, 255, 255, 0.08)",
   text: "#F4F4F6",
   textSoft: "rgba(244, 244, 246, 0.78)",
   textMuted: "rgba(244, 244, 246, 0.5)",
-  primary: "#d18726",
+  textSubtle: "rgba(244, 244, 246, 0.32)",
+  primarySoft: "#e3b271",
   chip: "rgba(11, 11, 15, 0.7)",
 };
 
 // gradients.primaryAction from theme.ts: colors ['#3B1554', '#AD5353', '#FFD103'],
-// locations [0, 0.68, 1], a left-to-right gradient (start/end share y=0.5).
+// locations [0, 0.68, 1] — the same gradient behind the app's "Start workout" button.
 const primaryActionGradient = "linear-gradient(90deg, #3B1554 0%, #AD5353 68%, #FFD103 100%)";
+
+const MAX_ROWS = 4;
 
 export default async function Image({ params }: { params: Promise<{ shareId: string }> }) {
   const { shareId } = await params;
-  const [preview, semibold, bold] = await Promise.all([
+  const [preview, montserratSemibold, montserratBold, brawlerRegular, brawlerBold] = await Promise.all([
     getPresetSharePreview(shareId),
     readFile(join(FONTS_DIR, "Montserrat_600SemiBold.ttf")),
     readFile(join(FONTS_DIR, "Montserrat_700Bold.ttf")),
+    readFile(join(FONTS_DIR, "Brawler_400Regular.ttf")),
+    readFile(join(FONTS_DIR, "Brawler_700Bold.ttf")),
   ]);
 
-  const exercisePreview = preview
-    ? preview.exerciseNames.slice(0, 5).join("  ·  ") +
-      (preview.exerciseNames.length > 5 ? `  ·  +${preview.exerciseNames.length - 5} more` : "")
-    : null;
+  const rows = preview?.exerciseNames.slice(0, MAX_ROWS) ?? [];
+  const remaining = preview ? preview.exerciseNames.length - rows.length : 0;
 
   return new ImageResponse(
     (
@@ -54,26 +59,24 @@ export default async function Image({ params }: { params: Promise<{ shareId: str
 
         <div
           style={{
-            alignItems: "flex-start",
             display: "flex",
             flex: 1,
             flexDirection: "column",
-            fontFamily: "Montserrat",
             justifyContent: "space-between",
-            padding: "56px 72px 64px",
+            padding: "44px 72px 48px",
           }}
         >
           <div
             style={{
-              color: colors.primary,
+              color: colors.primarySoft,
               display: "flex",
-              fontSize: 28,
-              fontWeight: 700,
-              letterSpacing: 4,
+              fontFamily: "Brawler",
+              fontSize: 22,
+              letterSpacing: 2.5,
               textTransform: "uppercase",
             }}
           >
-            LIFT
+            LIFT · SHARED PRESET
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -81,33 +84,85 @@ export default async function Image({ params }: { params: Promise<{ shareId: str
               style={{
                 color: colors.text,
                 display: "flex",
-                fontSize: preview && preview.name.length > 24 ? 60 : 80,
+                fontFamily: "Montserrat",
+                fontSize: preview && preview.name.length > 24 ? 54 : 72,
                 fontWeight: 700,
-                lineHeight: 1.1,
+                lineHeight: 1.15,
+                marginBottom: 22,
                 maxWidth: 1000,
               }}
             >
               {preview ? preview.name : "This preset link is no longer available"}
             </div>
-            {exercisePreview ? (
+
+            {rows.length > 0 ? (
               <div
                 style={{
-                  color: colors.textSoft,
+                  background: colors.card,
+                  border: `2px solid ${colors.border}`,
+                  borderRadius: 18,
                   display: "flex",
-                  fontSize: 28,
-                  fontWeight: 600,
-                  marginTop: 26,
-                  maxWidth: 1000,
+                  flexDirection: "column",
+                  paddingLeft: 24,
+                  paddingRight: 24,
                 }}
               >
-                {exercisePreview}
+                {rows.map((exerciseName, index) => (
+                  <div
+                    key={exerciseName + index}
+                    style={{
+                      alignItems: "center",
+                      borderBottom:
+                        index === rows.length - 1 && remaining <= 0
+                          ? "none"
+                          : `2px solid ${colors.border}`,
+                      display: "flex",
+                      height: 56,
+                      width: "100%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: colors.textSubtle,
+                        display: "flex",
+                        fontFamily: "Brawler",
+                        fontSize: 22,
+                        marginRight: 22,
+                        width: 36,
+                      }}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                    <div style={{ color: colors.textSoft, display: "flex", fontFamily: "Montserrat", fontSize: 26 }}>
+                      {exerciseName}
+                    </div>
+                  </div>
+                ))}
+                {remaining > 0 ? (
+                  <div style={{ alignItems: "center", display: "flex", height: 56, width: "100%" }}>
+                    <div style={{ color: colors.textMuted, display: "flex", fontFamily: "Brawler", fontSize: 22 }}>
+                      +{remaining} more
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : null}
           </div>
 
           <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <div style={{ color: colors.textMuted, display: "flex", fontSize: 22, fontWeight: 600 }}>
-              {preview ? `${preview.exerciseNames.length} exercises · Shared from Lift` : "Coming soon, to an app store near you"}
+            <div
+              style={{
+                color: colors.textMuted,
+                display: "flex",
+                fontFamily: "Brawler",
+                fontSize: 20,
+                letterSpacing: 0.5,
+                textTransform: "uppercase",
+              }}
+            >
+              {preview
+                ? `${preview.exerciseNames.length} exercise${preview.exerciseNames.length === 1 ? "" : "s"}`
+                : "Coming soon, to an app store near you"}
             </div>
 
             <div
@@ -122,21 +177,32 @@ export default async function Image({ params }: { params: Promise<{ shareId: str
                 paddingRight: 10,
               }}
             >
-              <div style={{ color: colors.text, display: "flex", fontSize: 26, fontWeight: 700, marginRight: 20 }}>
+              <div
+                style={{
+                  color: colors.text,
+                  display: "flex",
+                  fontFamily: "Montserrat",
+                  fontSize: 26,
+                  fontWeight: 600,
+                  marginRight: 20,
+                }}
+              >
                 Open in Lift
               </div>
               <div
                 style={{
                   alignItems: "center",
                   background: colors.chip,
-                  borderRadius: 12,
+                  borderRadius: 8,
                   display: "flex",
                   height: 48,
                   justifyContent: "center",
                   width: 48,
                 }}
               >
-                <div style={{ color: colors.text, display: "flex", fontSize: 26, fontWeight: 700 }}>&#8250;</div>
+                <div style={{ color: colors.text, display: "flex", fontFamily: "Montserrat", fontSize: 26, fontWeight: 700 }}>
+                  &#8250;
+                </div>
               </div>
             </div>
           </div>
@@ -146,8 +212,10 @@ export default async function Image({ params }: { params: Promise<{ shareId: str
     {
       ...size,
       fonts: [
-        { name: "Montserrat", data: semibold, weight: 600, style: "normal" },
-        { name: "Montserrat", data: bold, weight: 700, style: "normal" },
+        { name: "Montserrat", data: montserratSemibold, weight: 600, style: "normal" },
+        { name: "Montserrat", data: montserratBold, weight: 700, style: "normal" },
+        { name: "Brawler", data: brawlerRegular, weight: 400, style: "normal" },
+        { name: "Brawler", data: brawlerBold, weight: 700, style: "normal" },
       ],
     },
   );
