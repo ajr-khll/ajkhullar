@@ -11,6 +11,21 @@ export const alt = "Lift preset";
 
 const FONTS_DIR = join(process.cwd(), "src/app/lift-internal/p/[shareId]/fonts");
 
+// Mirrors src/constants/theme.ts (colors, gradients) from the Lift app repo —
+// keep in sync if that palette changes.
+const colors = {
+  background: "#0B0B0F",
+  text: "#F4F4F6",
+  textSoft: "rgba(244, 244, 246, 0.78)",
+  textMuted: "rgba(244, 244, 246, 0.5)",
+  primary: "#d18726",
+  chip: "rgba(11, 11, 15, 0.7)",
+};
+
+// gradients.primaryAction from theme.ts: colors ['#3B1554', '#AD5353', '#FFD103'],
+// locations [0, 0.68, 1], a left-to-right gradient (start/end share y=0.5).
+const primaryActionGradient = "linear-gradient(90deg, #3B1554 0%, #AD5353 68%, #FFD103 100%)";
+
 export default async function Image({ params }: { params: Promise<{ shareId: string }> }) {
   const { shareId } = await params;
   const [preview, semibold, bold] = await Promise.all([
@@ -28,66 +43,103 @@ export default async function Image({ params }: { params: Promise<{ shareId: str
     (
       <div
         style={{
-          alignItems: "flex-start",
-          background: "#0B0B0F",
+          background: colors.background,
           display: "flex",
           flexDirection: "column",
-          fontFamily: "Montserrat",
           height: "100%",
-          justifyContent: "space-between",
-          padding: "72px",
           width: "100%",
         }}
       >
+        <div style={{ background: primaryActionGradient, display: "flex", height: 10, width: "100%" }} />
+
         <div
           style={{
-            color: "#d18726",
+            alignItems: "flex-start",
             display: "flex",
-            fontSize: 28,
-            fontWeight: 700,
-            letterSpacing: 4,
-            textTransform: "uppercase",
+            flex: 1,
+            flexDirection: "column",
+            fontFamily: "Montserrat",
+            justifyContent: "space-between",
+            padding: "56px 72px 64px",
           }}
         >
-          LIFT
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              color: "#F4F4F6",
+              color: colors.primary,
               display: "flex",
-              fontSize: preview && preview.name.length > 24 ? 64 : 84,
+              fontSize: 28,
               fontWeight: 700,
-              lineHeight: 1.1,
-              maxWidth: 1000,
+              letterSpacing: 4,
+              textTransform: "uppercase",
             }}
           >
-            {preview ? preview.name : "This preset link is no longer available"}
+            LIFT
           </div>
-          {exercisePreview ? (
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <div
               style={{
-                color: "rgba(244, 244, 246, 0.78)",
+                color: colors.text,
                 display: "flex",
-                fontSize: 30,
-                fontWeight: 600,
-                marginTop: 28,
+                fontSize: preview && preview.name.length > 24 ? 60 : 80,
+                fontWeight: 700,
+                lineHeight: 1.1,
                 maxWidth: 1000,
               }}
             >
-              {exercisePreview}
+              {preview ? preview.name : "This preset link is no longer available"}
             </div>
-          ) : null}
-        </div>
-        <div
-          style={{
-            color: "rgba(244, 244, 246, 0.5)",
-            display: "flex",
-            fontSize: 24,
-            fontWeight: 600,
-          }}
-        >
-          {preview ? `${preview.exerciseNames.length} exercises · Shared from Lift` : "Coming soon, to an app store near you"}
+            {exercisePreview ? (
+              <div
+                style={{
+                  color: colors.textSoft,
+                  display: "flex",
+                  fontSize: 28,
+                  fontWeight: 600,
+                  marginTop: 26,
+                  maxWidth: 1000,
+                }}
+              >
+                {exercisePreview}
+              </div>
+            ) : null}
+          </div>
+
+          <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <div style={{ color: colors.textMuted, display: "flex", fontSize: 22, fontWeight: 600 }}>
+              {preview ? `${preview.exerciseNames.length} exercises · Shared from Lift` : "Coming soon, to an app store near you"}
+            </div>
+
+            <div
+              style={{
+                alignItems: "center",
+                background: primaryActionGradient,
+                borderRadius: 18,
+                display: "flex",
+                height: 68,
+                justifyContent: "space-between",
+                paddingLeft: 26,
+                paddingRight: 10,
+              }}
+            >
+              <div style={{ color: colors.text, display: "flex", fontSize: 26, fontWeight: 700, marginRight: 20 }}>
+                Open in Lift
+              </div>
+              <div
+                style={{
+                  alignItems: "center",
+                  background: colors.chip,
+                  borderRadius: 12,
+                  display: "flex",
+                  height: 48,
+                  justifyContent: "center",
+                  width: 48,
+                }}
+              >
+                <div style={{ color: colors.text, display: "flex", fontSize: 26, fontWeight: 700 }}>&#8250;</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     ),
