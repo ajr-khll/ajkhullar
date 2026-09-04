@@ -17,8 +17,10 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // /lift-internal is an implementation detail of the lift.* rewrite below;
-  // never let it be reached directly, on any host.
-  if (pathname.startsWith("/lift-internal")) {
+  // never let it be reached directly, on other hosts. On the lift host itself
+  // it must stay reachable: Next's auto-generated og:image asset URL for
+  // /p/[shareId] resolves to a literal /lift-internal/... path.
+  if (pathname.startsWith("/lift-internal") && host !== LIFT_HOST) {
     return new NextResponse(null, { status: 404 });
   }
 
@@ -33,13 +35,16 @@ export function middleware(req: NextRequest) {
       return NextResponse.rewrite(url);
     }
 
-    if (
-      pathname === "/" ||
-      /^\/p\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/?$/i.test(
-        pathname,
-      )
-    ) {
+    if (pathname === "/") {
       url.pathname = "/lift-internal";
+      return NextResponse.rewrite(url);
+    }
+
+    const shareMatch = pathname.match(
+      /^\/p\/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\/?$/i,
+    );
+    if (shareMatch) {
+      url.pathname = `/lift-internal/p/${shareMatch[1]}`;
       return NextResponse.rewrite(url);
     }
 
