@@ -1,0 +1,252 @@
+/* Blog — uses the homepage's tokens (--bg, --fg, --muted, --accent from
+   globals.css) so it follows the same light/dark theme. Chrome is JetBrains
+   Mono like the rest of the site; the article is Times. Scoped under .blog. */
+
+.blog {
+  --measure: 640px;
+  --serif: "Times New Roman", Times, "Liberation Serif", serif;
+  --mono: var(--font-jetbrains-mono), "SF Mono", Menlo, Consolas, monospace;
+  --wash: color-mix(in srgb, var(--fg) 6%, var(--bg));
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+}
+
+.blog ::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.blog a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+.blog a:hover {
+  opacity: 0.5;
+}
+
+/* ─── Top: same placement as the homepage ─────────────────────── */
+
+.b-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2.5rem 2.5rem 0;
+}
+.b-crumbs {
+  font-size: 1rem;
+}
+.b-sep,
+.b-section {
+  color: var(--muted);
+}
+.b-sep {
+  margin: 0 0.5rem;
+}
+.b-theme {
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.8;
+}
+.b-theme:hover {
+  opacity: 1;
+}
+
+/* ─── Post ────────────────────────────────────────────────────── */
+
+.b-post {
+  flex: 1;
+  width: 100%;
+  max-width: calc(var(--measure) + 3rem);
+  margin: 0 auto;
+  padding: 5rem 1.5rem 4rem;
+}
+
+.b-title {
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.b-date {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.b-body {
+  margin-top: 3rem;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.6;
+}
+.b-body > * + * {
+  margin-top: 1.25em;
+}
+.b-body p {
+  text-wrap: pretty;
+}
+
+.b-body a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.b-body h2 {
+  font-size: 1.35rem;
+  font-weight: 400;
+  font-style: italic;
+  margin-top: 2.25em;
+}
+.b-body h2 + * {
+  margin-top: 0.5em;
+}
+
+.b-body ul,
+.b-body ol {
+  padding-left: 1.4em;
+}
+
+.b-body blockquote {
+  padding-left: 1em;
+  border-left: 1px solid var(--muted);
+  color: var(--muted);
+}
+
+.b-body code {
+  font-family: var(--mono);
+  font-size: 0.78em;
+}
+
+/* ─── Media ───────────────────────────────────────────────────── */
+
+.b-body > .b-figure {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.b-body > .b-wide {
+  margin-left: -6rem;
+  margin-right: -6rem;
+}
+.b-body > .b-full {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* Images show at natural size, never wider than the column or taller than
+   most of the screen; videos fill the column. */
+.b-figure img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 75vh;
+  margin: 0 auto;
+}
+.b-figure video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--wash);
+}
+.b-figure figcaption {
+  text-align: center;
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.b-frame {
+  position: relative;
+  width: 100%;
+  background: var(--wash);
+}
+.b-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.b-canvas {
+  aspect-ratio: 16 / 7;
+}
+.b-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--accent); /* the canvas reads this for its dots */
+}
+
+.b-tweet {
+  display: flex;
+  justify-content: center;
+}
+.b-tweet .twitter-tweet {
+  width: 100%;
+  max-width: 550px;
+  margin: 0 !important;
+}
+.b-tweet blockquote.twitter-tweet {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.b-tweet blockquote.twitter-tweet p {
+  color: var(--fg);
+}
+
+.b-code {
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.65;
+  padding: 1rem 1.2rem;
+  background: var(--wash);
+}
+.b-body .b-code code {
+  font-size: inherit;
+}
+
+/* ─── Footer: matches the homepage's "© ajkhullar" ────────────── */
+
+.b-site-footer {
+  padding: 2rem 2.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .b-body > .b-wide {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .b-top {
+    padding: 1.5rem 1.5rem 0;
+  }
+  .b-post {
+    padding-top: 3rem;
+  }
+  .b-body {
+    font-size: 18px;
+  }
+  .b-site-footer {
+    padding: 2rem 1.5rem;
+  }
+}
