@@ -12,6 +12,8 @@ import { Tweet } from "@/components/blog/Tweet";
               https://youtube.com/watch?v=… / youtu.be/…        (video embed)
             An *italic line* right after media becomes its caption.
    Inline:  *em* _em_ **strong** `code` [text](url) and \-escapes.
+   Notes:   text[^id] with a "[^id]: note" line anywhere; numbered in order
+            of first reference and listed at the end of the post.
 
    Obsidian embeds resolve against `assetBase`; a .png with a sibling .svg of
    the same name is served as the .svg (sharper diagrams, smaller files). */
@@ -42,8 +44,21 @@ const TWEET = /^https?:\/\/(?:www\.)?(?:x|twitter)\.com\/\w+\/status\/\d+\S*$/;
 const YT = /^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})\S*$/;
 const CAPTION = /^(?:\*([^*].*)\*|_([^_].*)_)$/;
 
+type Notes = { defs: Map<string, string>; order: string[] };
+
+const NOTE_DEF = /^\[\^([^\]]+)\]:\s*(.*)$/;
+
 export function renderMarkdown(src: string, opts: Options): ReactNode[] {
-  const lines = src.replace(/\r\n?/g, "\n").split("\n");
+  const notes: Notes = { defs: new Map(), order: [] };
+  const lines = src
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .filter((l) => {
+      const d = l.trim().match(NOTE_DEF);
+      if (d) notes.defs.set(d[1], d[2]);
+      return !d;
+    });
+  const inline = (text: string) => renderInline(text, notes);
   const out: ReactNode[] = [];
   let i = 0;
   const key = () => out.length;
@@ -185,20 +200,45 @@ export function renderMarkdown(src: string, opts: Options): ReactNode[] {
     out.push(<p key={key()}>{inline(para.join(" "))}</p>);
   }
 
+  if (notes.order.length) {
+    out.push(
+      <ol className="b-notes" key={key()}>
+        {notes.order.map((id, j) => (
+          <li key={id} id={`fn-${j + 1}`}>
+            {inline(notes.defs.get(id) ?? "")}{" "}
+            <a href={`#fnref-${j + 1}`} aria-label="Back to text">
+              ↩
+            </a>
+          </li>
+        ))}
+      </ol>,
+    );
+  }
+
   return out;
 }
 
 const INLINE =
-  /\\([!-\/:-@[-`{-~])|`([^`]+)`|\*\*(.+?)\*\*|\*([^*\s](?:.*?[^*\s])?)\*|(?<![\w])_([^_\s](?:.*?[^_\s])?)_(?![\w])|\[([^\]]+)\]\(([^)\s]+)\)/g;
+  /\[\^([^\]]+)\]|\\([!-\/:-@[-`{-~])|`([^`]+)`|\*\*(.+?)\*\*|\*([^*\s](?:.*?[^*\s])?)\*|(?<![\w])_([^_\s](?:.*?[^_\s])?)_(?![\w])|\[([^\]]+)\]\(([^)\s]+)\)/g;
 
-function inline(text: string): ReactNode[] {
+function renderInline(text: string, notes: Notes): ReactNode[] {
+  const inline = (t: string) => renderInline(t, notes);
   const nodes: ReactNode[] = [];
   let last = 0;
   let k = 0;
   for (const m of text.matchAll(INLINE)) {
     if (m.index! > last) nodes.push(text.slice(last, m.index));
-    const [, esc, code, strong, em1, em2, linkText, href] = m;
-    if (esc !== undefined) nodes.push(esc);
+    const [, note, esc, code, strong, em1, em2, linkText, href] = m;
+    if (note !== undefined && notes.defs.has(note)) {
+      let n = notes.order.indexOf(note) + 1;
+      if (!n) n = notes.order.push(note);
+      nodes.push(
+        <sup className="b-fn" key={k++} id={`fnref-${n}`}>
+          <a href={`#fn-${n}`}>{n}</a>
+        </sup>,
+      );
+    } else if (note !== undefined) nodes.push(m[0]);
+    else if (esc !== undefined) nodes.push(esc);
     else if (code !== undefined) nodes.push(<code key={k++}>{code}</code>);
     else if (strong !== undefined) nodes.push(<strong key={k++}>{inline(strong)}</strong>);
     else if (em1 !== undefined || em2 !== undefined)

@@ -3,7 +3,12 @@
    Mono like the rest of the site; the article is Times. Scoped under .blog. */
 
 .blog {
-  --measure: 640px;
+  /* Long-form reading colours. Pure #eaeaea on #000 is harsh over a whole
+     article (the text halates), so prose gets a softer warm grey; headings
+     take the site's green so they read as landmarks. */
+  --text: #cfcbc2;
+  --heading: var(--accent);
+  --measure: 720px;
   --serif: "Times New Roman", Times, "Liberation Serif", serif;
   --mono: var(--font-jetbrains-mono), "SF Mono", Menlo, Consolas, monospace;
   --wash: color-mix(in srgb, var(--fg) 6%, var(--bg));
@@ -12,6 +17,11 @@
   display: flex;
   flex-direction: column;
   font-family: var(--mono);
+}
+
+:root[data-theme="light"] .blog {
+  --text: #2b2a27;
+  --heading: #15803d;
 }
 
 .blog ::selection {
@@ -72,8 +82,9 @@
 
 .b-title {
   font-family: var(--serif);
-  font-size: 2.25rem;
-  font-weight: 400;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--heading);
   line-height: 1.15;
   text-wrap: balance;
 }
@@ -88,11 +99,12 @@
 .b-body {
   margin-top: 3rem;
   font-family: var(--serif);
-  font-size: 20px;
-  line-height: 1.6;
+  font-size: 21px;
+  line-height: 1.65;
+  color: var(--text);
 }
 .b-body > * + * {
-  margin-top: 1.25em;
+  margin-top: 1em;
 }
 .b-body p {
   text-wrap: pretty;
@@ -105,13 +117,24 @@
 }
 
 .b-body h2 {
-  font-size: 1.35rem;
-  font-weight: 400;
-  font-style: italic;
-  margin-top: 2.25em;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--heading);
+  margin-top: 2em;
 }
-.b-body h2 + * {
+.b-body h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin-top: 1.75em;
+}
+.b-body h2 + *,
+.b-body h3 + * {
   margin-top: 0.5em;
+}
+.b-body strong {
+  color: var(--fg);
 }
 
 .b-body ul,
@@ -128,6 +151,30 @@
 .b-body code {
   font-family: var(--mono);
   font-size: 0.78em;
+}
+
+/* Footnotes: marker in the text, notes listed small at the end. */
+.b-fn {
+  font-family: var(--mono);
+  font-size: 0.6em;
+  line-height: 0;
+  margin-left: 0.1em;
+}
+.b-body .b-fn a,
+.b-notes a {
+  text-decoration: none;
+  color: var(--accent);
+}
+.b-body > .b-notes {
+  margin-top: 3em;
+  padding-left: 1.4em;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.b-notes li {
+  scroll-margin-top: 2rem;
 }
 
 /* ─── Media ───────────────────────────────────────────────────── */
@@ -149,10 +196,10 @@
    most of the screen; videos fill the column. */
 .b-figure img {
   display: block;
-  width: auto;
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  max-height: 75vh;
+  max-height: 90vh;
+  object-fit: contain;
   margin: 0 auto;
 }
 .b-figure video {
@@ -163,7 +210,7 @@
 }
 .b-figure figcaption {
   text-align: center;
-  margin-top: 0.6rem;
+  margin-top: 0.75rem;
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--muted);
