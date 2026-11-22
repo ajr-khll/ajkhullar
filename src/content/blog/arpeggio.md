@@ -1,6 +1,7 @@
 ---
 title: Arpeggio
 date: 2026-11-21
+play: arpeggio
 ---
 
 There are more possible chess games than atoms in the universe. Probably. I think I read that somewhere.

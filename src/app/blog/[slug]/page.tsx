@@ -1,32 +1,13 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { parseFrontmatter, renderMarkdown } from "@/lib/markdown";
-
-/* Each post is src/content/blog/<slug>.md, served at /blog/<slug>.
-   Its images live in public/blog/<slug>/ and are referenced Obsidian-style
-   (![[folder/file.png]]); only the filename is used. */
-
-const CONTENT = path.join(process.cwd(), "src/content/blog");
-const PUBLIC = path.join(process.cwd(), "public/blog");
-
-function load(slug: string) {
-  const file = path.join(CONTENT, `${slug}.md`);
-  if (!/^[\w-]+$/.test(slug) || !fs.existsSync(file)) return null;
-  const { data, body } = parseFrontmatter(fs.readFileSync(file, "utf8"));
-  const assetDir = path.join(PUBLIC, slug);
-  const assets = fs.existsSync(assetDir) ? fs.readdirSync(assetDir) : [];
-  return { title: data.title ?? slug, date: data.date, body, assets };
-}
+import { renderMarkdown } from "@/lib/markdown";
+import { loadPost, postSlugs } from "@/lib/posts";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return fs
-    .readdirSync(CONTENT)
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => ({ slug: f.slice(0, -3) }));
+  return postSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -34,13 +15,13 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = load((await params).slug);
+  const post = loadPost((await params).slug);
   return post ? { title: `${post.title} — AJ Khullar` } : {};
 }
 
 export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = load(slug);
+  const post = loadPost(slug);
   if (!post) notFound();
 
   return (
@@ -57,6 +38,15 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
       <div className="b-body">
         {renderMarkdown(post.body, { assetBase: `/blog/${slug}`, assets: post.assets })}
       </div>
+
+      {post.play === "arpeggio" && (
+        <Link href={`/blog/${slug}/play`} className="b-play-fab">
+          <svg viewBox="0 0 16 10" aria-hidden="true">
+            <path d="M1.5 1v5h12.5M11 3l3 3-3 3" />
+          </svg>
+          Play against Arpeggio
+        </Link>
+      )}
     </article>
   );
 }
