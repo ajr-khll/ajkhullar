@@ -153,6 +153,30 @@
   font-size: 0.78em;
 }
 
+/* Tables: plain rules, numbers in mono so columns line up. */
+.b-table {
+  overflow-x: auto;
+}
+.b-table table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.85em;
+}
+.b-table th,
+.b-table td {
+  padding: 0.35em 1.2em;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 15%, var(--bg));
+}
+.b-table th {
+  font-weight: 700;
+  color: var(--heading);
+  text-align: left;
+}
+.b-table td:first-child,
+.b-table td:last-child {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Footnotes: marker in the text, notes listed small at the end. */
 .b-fn {
   font-family: var(--mono);

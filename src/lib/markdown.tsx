@@ -6,7 +6,7 @@ import { Tweet } from "@/components/blog/Tweet";
 /* A small markdown renderer for blog posts written in Obsidian.
 
    Blocks:  #–###### headings, paragraphs, - / 1. lists, > quotes, ``` code,
-            --- rules, and media on a line of their own:
+            --- rules, | tables |, and media on a line of their own:
               ![[file.png]]  ![[file.png|480]]  ![alt](url)   (images, GIFs, .mp4)
               https://x.com/user/status/123                    (tweet)
               https://youtube.com/watch?v=… / youtu.be/…        (video embed)
@@ -45,6 +45,8 @@ const YT = /^https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{
 const CAPTION = /^(?:\*([^*].*)\*|_([^_].*)_)$/;
 
 type Notes = { defs: Map<string, string>; order: string[] };
+
+const TABLE_SEP = /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?$/;
 
 const NOTE_DEF = /^\[\^([^\]]+)\]:\s*(.*)$/;
 
@@ -164,6 +166,46 @@ export function renderMarkdown(src: string, opts: Options): ReactNode[] {
       continue;
     }
 
+    // | a | b |  table, with a |---| separator row after the header
+    if (line.startsWith("|") && TABLE_SEP.test(lines[i + 1]?.trim() ?? "")) {
+      const cells = (l: string) =>
+        l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+      const align = cells(lines[i + 1]).map((c) =>
+        /^:-+:$/.test(c) ? "center" : /-:$/.test(c) ? "right" : undefined,
+      );
+      const head = cells(line);
+      i += 2;
+      const rows: string[][] = [];
+      while (i < lines.length && lines[i].trim().startsWith("|")) rows.push(cells(lines[i++]));
+      out.push(
+        <div className="b-table" key={key()}>
+          <table>
+            <thead>
+              <tr>
+                {head.map((c, j) => (
+                  <th key={j} style={{ textAlign: align[j] }}>
+                    {inline(c)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, ri) => (
+                <tr key={ri}>
+                  {head.map((_, j) => (
+                    <td key={j} style={{ textAlign: align[j] }}>
+                      {inline(r[j] ?? "")}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+
     const ordered = /^\d+\.\s/.test(line);
     if (ordered || /^[-*+]\s/.test(line)) {
       const marker = ordered ? /^\d+\.\s+/ : /^[-*+]\s+/;
@@ -191,6 +233,7 @@ export function renderMarkdown(src: string, opts: Options): ReactNode[] {
         /^#{1,6}\s/.test(l) ||
         IMAGE_EMBED.test(l) ||
         IMAGE_MD.test(l) ||
+        (l.startsWith("|") && TABLE_SEP.test(lines[i + 1]?.trim() ?? "")) ||
         (para.length > 0 && (l.startsWith(">") || /^([-*+]|\d+\.)\s/.test(l)))
       )
         break;
